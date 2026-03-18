@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InnerView - 당신을 이해하게 만드는 앱</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="header">
+    <h1>INNERVIEW</h1>
+    <p>당신을 분석하는 앱이 아니라, 당신을 이해하게 만드는 앱</p>
+</div>
+
+<div class="container">
+
+    <!-- HOME -->
+    <div id="screen-home" class="screen active">
+        <div class="menu-card" onclick="startJourney()">
+            <h3>나를 찾아 떠나는 여행</h3>
+            <p>깊은 숲 속으로 떠나는 자기이해 여행.<br>당신의 성격, 관계 패턴, 사랑 스타일을 발견합니다.</p>
+            <span class="tag">Phase 1 - 자기이해</span>
+        </div>
+        <div class="menu-card" onclick="startCoupleGame()">
+            <h3>커플 게임</h3>
+            <p>둘이서 함께 하는 관계 탐험 게임.<br>예측 게임, 밸런스 게임, 시크릿 카드, 챌린지 미션!</p>
+            <span class="tag">Phase 2 - 함께</span>
+        </div>
+    </div>
+
+    <!-- JOURNEY -->
+    <div id="screen-journey" class="screen">
+        <div class="progress-text" id="progress-text">1 / 35</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+        </div>
+        <div class="narrative" id="narrative"></div>
+        <div class="question-text" id="question-text"></div>
+        <div id="choices"></div>
+    </div>
+
+    <!-- REPORT -->
+    <div id="screen-report" class="screen">
+        <h2 class="text-center mb-20" style="color: var(--primary-light)">여행이 끝났습니다</h2>
+        <div id="report-content"></div>
+        <div class="text-center mt-40">
+            <button class="btn btn-outline" onclick="goHome()">처음으로</button>
+        </div>
+    </div>
+
+    <!-- COUPLE GAME -->
+    <div id="screen-couple" class="screen">
+        <div class="game-tabs">
+            <div class="game-tab active" data-tab="balance" onclick="switchTab('balance')">밸런스 게임</div>
+            <div class="game-tab" data-tab="predict" onclick="switchTab('predict')">예측 게임</div>
+            <div class="game-tab" data-tab="challenge" onclick="switchTab('challenge')">챌린지</div>
+        </div>
+
+        <!-- Balance Game -->
+        <div id="tab-balance" class="tab-content">
+            <p class="text-center mb-20" style="color: var(--text-dim)">같은 선택을 하면 싱크로율이 올라갑니다!</p>
+            <div id="balance-questions"></div>
+            <div class="text-center mt-20">
+                <button class="btn btn-accent btn-full" onclick="submitBalance()">싱크로율 확인하기</button>
+            </div>
+        </div>
+
+        <!-- Predict Game -->
+        <div id="tab-predict" class="tab-content" style="display:none">
+            <p class="text-center mb-20" style="color: var(--text-dim)">상대방의 선택을 맞춰보세요!</p>
+            <div id="predict-questions"></div>
+        </div>
+
+        <!-- Challenge -->
+        <div id="tab-challenge" class="tab-content" style="display:none">
+            <p class="text-center mb-20" style="color: var(--text-dim)">오늘의 챌린지 미션</p>
+            <div id="challenge-list"></div>
+        </div>
+    </div>
+
+    <!-- COUPLE RESULT -->
+    <div id="screen-couple-result" class="screen">
+        <h2 class="text-center mb-20" style="color: var(--primary-light)">커플 결과</h2>
+        <div id="couple-result-content"></div>
+        <div class="text-center mt-40">
+            <button class="btn btn-outline" onclick="goHome()">처음으로</button>
+        </div>
+    </div>
+</div>
+
+<script>
+let sessionId = null;
+let coupleData = null;
+
+// ──── Navigation ────
+
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + id).classList.add('active');
+}
+
+function goHome() {
+    showScreen('home');
+}
+
+function switchTab(tab) {
+    document.querySelectorAll('.game-tab').forEach(t => t.classList.remove('active'));
+    document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+    document.getElementById('tab-' + tab).style.display = 'block';
+}
+
+// ──── Phase 1: Journey ────
+
+async function startJourney() {
+    const res = await fetch('/api/start', { method: 'POST' });
+    const data = await res.json();
+    sessionId = data.session_id;
+    renderQuestion(data.question, data.progress);
+    showScreen('journey');
+}
+
+function renderQuestion(q, progress) {
+    document.getElementById('progress-text').textContent = `${progress.current} / ${progress.total}`;
+    document.getElementById('progress-fill').style.width = `${(progress.current / progress.total) * 100}%`;
+    document.getElementById('narrative').textContent = q.narrative;
+    document.getElementById('question-text').textContent = q.question;
+
+    const choicesDiv = document.getElementById('choices');
+    choicesDiv.innerHTML = '';
+    q.choices.forEach((c, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.textContent = c.text;
+        btn.onclick = () => answerQuestion(i);
+        choicesDiv.appendChild(btn);
+    });
+}
+
+async function answerQuestion(choiceIndex) {
+    // Disable buttons
+    document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+
+    const res = await fetch('/api/answer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: sessionId, choice_index: choiceIndex }),
+    });
+    const data = await res.json();
+
+    if (data.complete) {
+        renderReport(data.report, data.scores);
+        showScreen('report');
+    } else {
+        renderQuestion(data.question, data.progress);
+    }
+}
+
+function renderReport(report, scores) {
+    const el = document.getElementById('report-content');
+    let html = '';
+
+    // Summary
+    html += `<div class="report-section"><h3>당신의 심리 프로파일</h3><p>${report.profile_summary}</p></div>`;
+
+    // Score bars
+    const bf = scores.big_five;
+    html += `<div class="report-section"><h3>성격 점수</h3><div class="score-bars">`;
+    const dims = [
+        ['외향성', bf.extraversion, 'ext'],
+        ['신경성', bf.neuroticism, 'neu'],
+        ['성실성', bf.conscientiousness, 'con'],
+        ['개방성', bf.openness, 'opn'],
+        ['친화성', bf.agreeableness, 'agr'],
+    ];
+    dims.forEach(([label, val, cls]) => {
+        html += `<div class="score-bar-item">
+            <label><span>${label}</span><span>${Math.round(val)}%</span></label>
+            <div class="score-bar-bg"><div class="score-bar-val ${cls}" style="width:${val}%"></div></div>
+        </div>`;
+    });
+    html += `</div></div>`;
+
+    // Sections
+    report.sections.forEach(section => {
+        html += `<div class="report-section"><h3>${section.title}</h3><p>${section.summary}</p>`;
+        section.insights.forEach(insight => {
+            html += `<div class="insight-card">
+                <h4>${insight.title}</h4>
+                <p>${insight.description}</p>
+                <p class="empathy">${insight.empathy_message}</p>
+            </div>`;
+        });
+        html += `</div>`;
+    });
+
+    // Struggle
+    html += `<div class="report-section"><h3>당신이 힘든 이유</h3><p>${report.struggle_reason}</p></div>`;
+
+    // Comfort
+    html += `<div class="comfort-box">${report.comfort_message}</div>`;
+
+    // Tips
+    if (report.action_tips.length > 0) {
+        html += `<div class="report-section"><h3>오늘부터 할 수 있는 것</h3><ul class="tip-list">`;
+        report.action_tips.forEach(tip => {
+            html += `<li>${tip}</li>`;
+        });
+        html += `</ul></div>`;
+    }
+
+    el.innerHTML = html;
+}
+
+// ──── Phase 2: Couple Game ────
+
+async function startCoupleGame() {
+    const res = await fetch('/api/couple/start', { method: 'POST' });
+    coupleData = await res.json();
+    renderBalanceQuestions(coupleData.balance_questions);
+    renderPredictQuestions(coupleData.predict_questions);
+    loadChallenges();
+    showScreen('couple');
+}
+
+function renderBalanceQuestions(questions) {
+    const el = document.getElementById('balance-questions');
+    let html = '';
+    questions.forEach((q, i) => {
+        html += `<div class="balance-card" data-q-index="${i}">
+            <h4>${q.question}</h4>
+            <p style="color:var(--accent);font-size:0.8rem;margin-bottom:12px">Player 1</p>
+            <div class="balance-options">
+                <div class="balance-opt" onclick="selectBalance(this, ${i}, 'a', 1)" data-player="1" data-value="a">${q.option_a}</div>
+                <div class="balance-opt" onclick="selectBalance(this, ${i}, 'b', 1)" data-player="1" data-value="b">${q.option_b}</div>
+            </div>
+            <p style="color:var(--primary-light);font-size:0.8rem;margin:12px 0 8px">Player 2</p>
+            <div class="balance-options">
+                <div class="balance-opt" onclick="selectBalance(this, ${i}, 'a', 2)" data-player="2" data-value="a">${q.option_a}</div>
+                <div class="balance-opt" onclick="selectBalance(this, ${i}, 'b', 2)" data-player="2" data-value="b">${q.option_b}</div>
+            </div>
+        </div>`;
+    });
+    el.innerHTML = html;
+}
+
+function selectBalance(el, qIndex, value, player) {
+    const card = el.closest('.balance-card');
+    card.querySelectorAll(`.balance-opt[data-player="${player}"]`).forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+}
+
+async function submitBalance() {
+    const cards = document.querySelectorAll('.balance-card');
+    const answersA = [];
+    const answersB = [];
+    let allAnswered = true;
+
+    cards.forEach(card => {
+        const selA = card.querySelector('.balance-opt[data-player="1"].selected');
+        const selB = card.querySelector('.balance-opt[data-player="2"].selected');
+        if (!selA || !selB) {
+            allAnswered = false;
+            return;
+        }
+        answersA.push(selA.dataset.value);
+        answersB.push(selB.dataset.value);
+    });
+
+    if (!allAnswered) {
+        alert('모든 질문에 답해주세요!');
+        return;
+    }
+
+    const res = await fetch('/api/couple/balance', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            session_id: coupleData.session_id,
+            answers_a: answersA,
+            answers_b: answersB,
+        }),
+    });
+    const result = await res.json();
+    renderCoupleResult(result);
+    showScreen('couple-result');
+}
+
+function renderCoupleResult(result) {
+    const el = document.getElementById('couple-result-content');
+    const pct = result.sync_percentage;
+    let grade = 'D';
+    let gradeClass = 'd';
+    if (pct >= 90) { grade = 'S'; gradeClass = 's'; }
+    else if (pct >= 75) { grade = 'A'; gradeClass = 'a'; }
+    else if (pct >= 60) { grade = 'B'; gradeClass = 'b'; }
+    else if (pct >= 40) { grade = 'C'; gradeClass = 'c'; }
+
+    let html = `
+        <div class="sync-circle">
+            <div>
+                <div class="number">${Math.round(pct)}</div>
+                <div class="unit">%</div>
+            </div>
+        </div>
+        <div class="sync-grade ${gradeClass}">${grade}</div>
+        <p class="text-center" style="color:var(--text-dim)">싱크로율: ${result.matched}/${result.total} 일치</p>
+    `;
+
+    if (result.highlights.length > 0) {
+        html += `<div class="report-section mt-20"><h3>일치하는 부분</h3>`;
+        result.highlights.forEach(h => html += `<p style="color:var(--success)">${h}</p>`);
+        html += `</div>`;
+    }
+
+    if (result.mismatches.length > 0) {
+        html += `<div class="report-section"><h3>다른 부분</h3>`;
+        result.mismatches.forEach(m => html += `<p style="color:var(--warning)">${m}</p>`);
+        html += `</div>`;
+    }
+
+    el.innerHTML = html;
+}
+
+function renderPredictQuestions(questions) {
+    const el = document.getElementById('predict-questions');
+    let html = '';
+    questions.forEach((q, i) => {
+        html += `<div class="report-section">
+            <p style="color:var(--text-dim);font-style:italic;margin-bottom:12px">${q.situation}</p>
+            <h3>${q.question}</h3>`;
+        q.choices.forEach((c, ci) => {
+            html += `<button class="choice-btn" onclick="this.classList.toggle('selected')">${c}</button>`;
+        });
+        html += `</div>`;
+    });
+    el.innerHTML = html;
+}
+
+async function loadChallenges() {
+    const res = await fetch('/api/challenges');
+    const challenges = await res.json();
+    const el = document.getElementById('challenge-list');
+    let html = '';
+    challenges.forEach(c => {
+        const stars = '★'.repeat(c.difficulty) + '☆'.repeat(3 - c.difficulty);
+        html += `<div class="challenge-card">
+            <h4>${c.title}</h4>
+            <p>${c.description}</p>
+            <div class="challenge-meta">
+                <span>난이도: ${stars}</span>
+                <span>보상: ${c.reward_points}점</span>
+            </div>
+        </div>`;
+    });
+    el.innerHTML = html;
+}
+</script>
+</body>
+</html>
