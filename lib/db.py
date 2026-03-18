@@ -11,7 +11,7 @@ from typing import Optional
 from .models.user_profile import UserProfile
 
 
-DB_PATH = Path(__file__).parent.parent / "innerview.db"
+DB_PATH = Path(__file__).parent.parent / "miromi.db"
 
 
 class Database:

@@ -1,4 +1,4 @@
-"""InnerView CLI - 터미널에서 심리 여행 체험"""
+"""Miromi CLI - 터미널에서 심리 여행 체험"""
 
 from __future__ import annotations
 
@@ -51,7 +51,7 @@ def get_choice(num_choices: int) -> int:
 
 def run_phase1():
     """Phase 1: 나를 찾아 떠나는 여행"""
-    print_header("InnerView - 나를 찾아 떠나는 여행")
+    print_header("Miromi - 나를 찾아 떠나는 여행")
     print("\n  당신을 이해하기 위한 여행을 시작합니다.")
     print("  각 질문에 솔직하게 답해주세요.")
     print("  정답은 없습니다. 당신의 마음이 정답입니다.\n")
@@ -120,7 +120,7 @@ def run_phase1():
 
 def run_couple_game():
     """Phase 2: 커플 게임"""
-    print_header("InnerView - 커플 게임")
+    print_header("Miromi - 커플 게임")
     print("\n  둘이 함께 하는 관계 탐험 게임입니다!")
     print("  서로를 얼마나 알고 있는지 확인해보세요.\n")
 
@@ -300,9 +300,10 @@ def main():
     print("\n")
     print("  ╔══════════════════════════════════════╗")
     print("  ║                                      ║")
-    print("  ║          I N N E R V I E W            ║")
+    print("  ║            M I R O M I                ║")
     print("  ║                                      ║")
-    print("  ║   당신을 이해하게 만드는 앱           ║")
+    print("  ║  나를 비추는 거울,                    ║")
+    print("  ║  당신을 이해하게 만드는 앱            ║")
     print("  ║                                      ║")
     print("  ╚══════════════════════════════════════╝")
     print("\n  무엇을 하시겠어요?\n")

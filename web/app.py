@@ -1,4 +1,4 @@
-"""InnerView 웹 데모 - FastAPI + Jinja2"""
+"""Miromi 웹 데모 - FastAPI + Jinja2"""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ from lib.engines.narrative_engine import NarrativeEngine
 from lib.engines.couple_game_engine import CoupleGameEngine
 from lib.db import Database
 
-app = FastAPI(title="InnerView", description="심리학 기반 자기이해 + 관계 개선 도구")
+app = FastAPI(title="Miromi", description="나를 비추는 거울, 당신을 이해하게 만드는 앱")
 
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 STATIC_DIR = Path(__file__).parent / "static"
