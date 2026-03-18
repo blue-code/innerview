@@ -1,0 +1,762 @@
+{
+  "meta": {
+    "version": "1.0",
+    "total_questions": 50,
+    "phases": {
+      "1": "나를 찾아 떠나는 여행",
+      "2": "연인을 알자"
+    }
+  },
+  "questions": [
+    {
+      "id": "E01",
+      "category": "emotion",
+      "narrative": "여행이 시작됩니다. 당신은 깊은 숲의 입구에 서 있습니다. 숲 속에서 작은 빛이 보입니다.",
+      "question": "이 순간, 당신의 마음 상태는 어떤가요?",
+      "choices": [
+        {"text": "설레면서도 궁금하다 — 빨리 들어가고 싶다", "scores": {"extraversion": 8, "openness": 7}},
+        {"text": "조금 긴장되지만 괜찮다 — 천천히 가보자", "scores": {"conscientiousness": 7, "neuroticism": 3}},
+        {"text": "불안하다 — 혼자 가도 되는 걸까", "scores": {"neuroticism": 8, "attachment_anxious": 5}},
+        {"text": "담담하다 — 어차피 나 혼자 하는 여행이니까", "scores": {"attachment_avoidant": 6, "extraversion": 2}}
+      ],
+      "dimensions": ["extraversion", "neuroticism", "openness"],
+      "phase": 1,
+      "order": 1
+    },
+    {
+      "id": "E02",
+      "category": "emotion",
+      "narrative": "숲 속을 걷다 보니, 길이 두 갈래로 나뉩니다. 한쪽은 밝고 넓은 길, 다른 한쪽은 어둡지만 꽃향기가 나는 좁은 길.",
+      "question": "당신은 어느 길을 선택하나요?",
+      "choices": [
+        {"text": "밝고 넓은 길 — 안전하고 예측 가능한 게 좋다", "scores": {"conscientiousness": 7, "neuroticism": 4}},
+        {"text": "꽃향기 나는 좁은 길 — 뭔가 특별한 게 있을 것 같다", "scores": {"openness": 8, "extraversion": 5}},
+        {"text": "잠시 멈춰서 두 길을 모두 살펴본다", "scores": {"conscientiousness": 8, "openness": 5}},
+        {"text": "길이 아닌 곳으로 내 길을 만든다", "scores": {"openness": 10, "extraversion": 6}}
+      ],
+      "dimensions": ["openness", "conscientiousness"],
+      "phase": 1,
+      "order": 2
+    },
+    {
+      "id": "E03",
+      "category": "emotion",
+      "narrative": "좁은 길을 걷다 보니 작은 연못이 나타납니다. 연못에 비친 당신의 얼굴을 봅니다.",
+      "question": "연못에 비친 자신을 보며 어떤 생각이 드나요?",
+      "choices": [
+        {"text": "꽤 괜찮은 사람이네 — 나 자신이 좋다", "scores": {"attachment_secure": 8, "neuroticism": 2}},
+        {"text": "좀 지쳐 보인다 — 나도 모르게 힘들었나 보다", "scores": {"neuroticism": 7, "agreeableness": 5}},
+        {"text": "이게 진짜 나인가? — 잘 모르겠다", "scores": {"neuroticism": 6, "openness": 5}},
+        {"text": "빨리 지나가자 — 나를 보는 게 불편하다", "scores": {"attachment_avoidant": 7, "neuroticism": 5}}
+      ],
+      "dimensions": ["neuroticism", "attachment_secure", "attachment_avoidant"],
+      "phase": 1,
+      "order": 3
+    },
+    {
+      "id": "E04",
+      "category": "emotion",
+      "narrative": "숲 속에서 갑자기 비가 내리기 시작합니다. 우산은 없습니다.",
+      "question": "비를 맞으며 당신은 어떻게 하나요?",
+      "choices": [
+        {"text": "그냥 맞으며 걷는다 — 비도 나쁘지 않다", "scores": {"openness": 7, "attachment_secure": 5}},
+        {"text": "나뭇잎으로 머리를 가리고 빠르게 이동한다", "scores": {"conscientiousness": 7, "neuroticism": 4}},
+        {"text": "비를 맞으며 조금 울고 싶어진다", "scores": {"neuroticism": 8, "attachment_anxious": 5}},
+        {"text": "누군가 우산을 들고 와줬으면 좋겠다고 생각한다", "scores": {"attachment_anxious": 7, "agreeableness": 5}}
+      ],
+      "dimensions": ["neuroticism", "openness", "attachment_anxious"],
+      "phase": 1,
+      "order": 4
+    },
+    {
+      "id": "E05",
+      "category": "emotion",
+      "narrative": "비가 그치고 무지개가 떴습니다. 멀리서 다른 여행자의 목소리가 들립니다.",
+      "question": "당신은 그 목소리를 향해 가나요?",
+      "choices": [
+        {"text": "반갑게 다가간다 — 같이 가면 좋겠다", "scores": {"extraversion": 9, "agreeableness": 7}},
+        {"text": "가까이 가서 먼저 살펴본다", "scores": {"conscientiousness": 6, "extraversion": 5}},
+        {"text": "그냥 혼자 간다 — 나만의 여행이니까", "scores": {"extraversion": 2, "attachment_avoidant": 5}},
+        {"text": "목소리 방향은 알지만 다가가기 망설여진다", "scores": {"neuroticism": 6, "attachment_anxious": 6}}
+      ],
+      "dimensions": ["extraversion", "agreeableness"],
+      "phase": 1,
+      "order": 5
+    },
+    {
+      "id": "V01",
+      "category": "values",
+      "narrative": "숲 속 오두막을 발견했습니다. 안에 네 개의 상자가 있고, 하나만 가져갈 수 있습니다.",
+      "question": "어떤 상자를 선택하시겠어요?",
+      "choices": [
+        {"text": "'진실'이라고 적힌 상자 — 나의 진짜 모습을 알고 싶다", "scores": {"openness": 9, "conscientiousness": 5}},
+        {"text": "'안정'이라고 적힌 상자 — 평온한 마음이 필요하다", "scores": {"neuroticism": 3, "attachment_secure": 7}},
+        {"text": "'연결'이라고 적힌 상자 — 소중한 사람과의 관계가 중요하다", "scores": {"agreeableness": 8, "intimacy": 7}},
+        {"text": "'자유'라고 적힌 상자 — 나답게 사는 게 가장 중요하다", "scores": {"openness": 8, "extraversion": 6}}
+      ],
+      "dimensions": ["openness", "agreeableness", "attachment_secure"],
+      "phase": 1,
+      "order": 6
+    },
+    {
+      "id": "V02",
+      "category": "values",
+      "narrative": "오두막 벽에 거울이 걸려 있습니다. 거울 속에 10년 후의 당신이 보입니다.",
+      "question": "10년 후의 당신은 어떤 모습이길 바라나요?",
+      "choices": [
+        {"text": "사랑하는 사람과 함께 평화롭게 지내는 모습", "scores": {"intimacy": 8, "commitment": 7, "agreeableness": 6}},
+        {"text": "자신만의 분야에서 인정받는 모습", "scores": {"conscientiousness": 8, "openness": 6}},
+        {"text": "새로운 곳을 여행하며 자유롭게 사는 모습", "scores": {"openness": 9, "extraversion": 7}},
+        {"text": "지금보다 더 나 자신을 잘 이해하는 모습", "scores": {"openness": 7, "attachment_secure": 6}}
+      ],
+      "dimensions": ["openness", "conscientiousness", "intimacy", "commitment"],
+      "phase": 1,
+      "order": 7
+    },
+    {
+      "id": "V03",
+      "category": "values",
+      "narrative": "길을 걷다 지갑을 주웠습니다. 주인은 보이지 않습니다.",
+      "question": "당신은 어떻게 하나요?",
+      "choices": [
+        {"text": "그 자리에 두고 간다 — 주인이 돌아오겠지", "scores": {"conscientiousness": 5, "agreeableness": 4}},
+        {"text": "가까운 곳에 맡긴다 — 누군가 찾아주겠지", "scores": {"agreeableness": 7, "conscientiousness": 7}},
+        {"text": "직접 주인을 찾아본다 — 분명 걱정하고 있을 거다", "scores": {"agreeableness": 9, "conscientiousness": 8}},
+        {"text": "잠시 고민한다 — 나도 지금 지쳤는데", "scores": {"neuroticism": 5, "conscientiousness": 4}}
+      ],
+      "dimensions": ["agreeableness", "conscientiousness"],
+      "phase": 1,
+      "order": 8
+    },
+    {
+      "id": "V04",
+      "category": "values",
+      "narrative": "오두막에서 나와 계속 걷다 보니, 절벽 앞에 섭니다. 건너편에 아름다운 풍경이 보입니다.",
+      "question": "절벽을 건너기 위한 낡은 다리가 있습니다. 어떻게 하시겠어요?",
+      "choices": [
+        {"text": "바로 건넌다 — 저기 가보고 싶다", "scores": {"openness": 9, "extraversion": 7, "neuroticism": 2}},
+        {"text": "다리 상태를 먼저 확인한다", "scores": {"conscientiousness": 9, "neuroticism": 5}},
+        {"text": "다른 길을 찾아본다", "scores": {"conscientiousness": 7, "neuroticism": 6}},
+        {"text": "멀리서 풍경만 바라본다 — 굳이 위험을 감수할 필요 없다", "scores": {"neuroticism": 7, "conscientiousness": 5}}
+      ],
+      "dimensions": ["openness", "conscientiousness", "neuroticism"],
+      "phase": 1,
+      "order": 9
+    },
+    {
+      "id": "V05",
+      "category": "values",
+      "narrative": "숲 속에서 마법 같은 일이 일어납니다. 당신에게 하루 동안 어떤 능력이든 가질 수 있다고 합니다.",
+      "question": "어떤 능력을 선택하시겠어요?",
+      "choices": [
+        {"text": "다른 사람의 마음을 읽는 능력", "scores": {"agreeableness": 7, "attachment_anxious": 5, "intimacy": 6}},
+        {"text": "과거의 어떤 순간이든 다시 갈 수 있는 능력", "scores": {"neuroticism": 6, "openness": 5}},
+        {"text": "모든 사람에게 사랑받는 능력", "scores": {"attachment_anxious": 7, "extraversion": 6}},
+        {"text": "완벽하게 나 자신일 수 있는 능력", "scores": {"attachment_secure": 8, "openness": 7}}
+      ],
+      "dimensions": ["agreeableness", "attachment_anxious", "attachment_secure"],
+      "phase": 1,
+      "order": 10
+    },
+    {
+      "id": "B01",
+      "category": "behavior",
+      "narrative": "숲을 지나 작은 마을에 도착했습니다. 마을 축제가 한창입니다.",
+      "question": "축제 현장에서 당신은 어떻게 행동하나요?",
+      "choices": [
+        {"text": "바로 사람들 틈에 섞여서 즐긴다", "scores": {"extraversion": 10, "agreeableness": 6}},
+        {"text": "구경하다가 자연스럽게 참여한다", "scores": {"extraversion": 6, "openness": 6}},
+        {"text": "한쪽에서 조용히 관찰한다", "scores": {"extraversion": 2, "openness": 5}},
+        {"text": "사람이 너무 많아서 조용한 곳을 찾는다", "scores": {"extraversion": 1, "neuroticism": 5}}
+      ],
+      "dimensions": ["extraversion"],
+      "phase": 1,
+      "order": 11
+    },
+    {
+      "id": "B02",
+      "category": "behavior",
+      "narrative": "마을에서 한 할머니가 무거운 짐을 들고 힘들어하고 있습니다.",
+      "question": "당신의 반응은?",
+      "choices": [
+        {"text": "바로 달려가서 도와드린다", "scores": {"agreeableness": 10, "extraversion": 6}},
+        {"text": "도와드리고 싶지만 먼저 말 걸기가 쑥스럽다", "scores": {"agreeableness": 7, "extraversion": 3, "neuroticism": 4}},
+        {"text": "누군가 도와주겠지 하고 지나간다", "scores": {"agreeableness": 2, "conscientiousness": 3}},
+        {"text": "도와드린 후 대화를 나누며 이야기를 듣는다", "scores": {"agreeableness": 9, "extraversion": 8, "openness": 6}}
+      ],
+      "dimensions": ["agreeableness", "extraversion"],
+      "phase": 1,
+      "order": 12
+    },
+    {
+      "id": "B03",
+      "category": "behavior",
+      "narrative": "마을 여관에서 하룻밤 묵게 되었습니다. 방에 일기장이 놓여 있습니다.",
+      "question": "일기장을 펼쳤을 때, 당신은 무엇을 쓰고 싶나요?",
+      "choices": [
+        {"text": "오늘 만난 사람들과 나눈 이야기", "scores": {"extraversion": 7, "agreeableness": 7}},
+        {"text": "오늘 내가 느낀 감정들을 솔직하게", "scores": {"openness": 8, "neuroticism": 5}},
+        {"text": "내일의 계획과 목표", "scores": {"conscientiousness": 9, "neuroticism": 3}},
+        {"text": "쓰지 않는다 — 감정을 글로 쓰는 건 어렵다", "scores": {"attachment_avoidant": 6, "neuroticism": 4}}
+      ],
+      "dimensions": ["extraversion", "openness", "conscientiousness"],
+      "phase": 1,
+      "order": 13
+    },
+    {
+      "id": "B04",
+      "category": "behavior",
+      "narrative": "여관 주인이 내일 두 가지 일 중 하나를 도와달라고 합니다.",
+      "question": "어떤 일을 선택하나요?",
+      "choices": [
+        {"text": "손님맞이 — 새로운 사람을 만나는 게 즐겁다", "scores": {"extraversion": 9, "agreeableness": 6}},
+        {"text": "정원 가꾸기 — 혼자 조용히 하는 일이 편하다", "scores": {"extraversion": 2, "conscientiousness": 7}},
+        {"text": "요리 돕기 — 결과물이 보이는 일이 좋다", "scores": {"conscientiousness": 8, "agreeableness": 5}},
+        {"text": "아무거나 괜찮다 — 도움이 되면 좋겠다", "scores": {"agreeableness": 8, "openness": 5}}
+      ],
+      "dimensions": ["extraversion", "conscientiousness", "agreeableness"],
+      "phase": 1,
+      "order": 14
+    },
+    {
+      "id": "B05",
+      "category": "behavior",
+      "narrative": "마을을 떠나기 전, 다른 여행자가 합류하고 싶다고 합니다.",
+      "question": "당신의 반응은?",
+      "choices": [
+        {"text": "좋다! 같이 가자", "scores": {"extraversion": 9, "agreeableness": 8}},
+        {"text": "괜찮지만, 서로 페이스가 맞을지 걱정된다", "scores": {"neuroticism": 5, "conscientiousness": 6}},
+        {"text": "정중하게 거절한다 — 혼자가 편하다", "scores": {"extraversion": 1, "attachment_avoidant": 6}},
+        {"text": "같이 가되, 적당한 거리를 유지하고 싶다", "scores": {"attachment_avoidant": 5, "conscientiousness": 5}}
+      ],
+      "dimensions": ["extraversion", "attachment_avoidant"],
+      "phase": 1,
+      "order": 15
+    },
+    {
+      "id": "B06",
+      "category": "behavior",
+      "narrative": "여행 중 예상치 못한 문제가 생겼습니다. 다리가 끊어져서 계획한 길로 갈 수 없습니다.",
+      "question": "당신은 어떻게 대처하나요?",
+      "choices": [
+        {"text": "당황하지 않고 바로 대안을 찾는다", "scores": {"conscientiousness": 8, "openness": 6, "neuroticism": 2}},
+        {"text": "잠시 앉아서 생각을 정리한 후 움직인다", "scores": {"conscientiousness": 7, "neuroticism": 4}},
+        {"text": "누군가에게 도움을 요청한다", "scores": {"agreeableness": 6, "attachment_anxious": 5}},
+        {"text": "좌절감이 밀려온다 — 왜 나한테만 이런 일이", "scores": {"neuroticism": 9, "attachment_anxious": 6}}
+      ],
+      "dimensions": ["conscientiousness", "neuroticism"],
+      "phase": 1,
+      "order": 16
+    },
+    {
+      "id": "B07",
+      "category": "behavior",
+      "narrative": "새로운 길을 걷다 보니 아름다운 호수를 발견했습니다.",
+      "question": "이 순간 가장 하고 싶은 것은?",
+      "choices": [
+        {"text": "사진을 찍어서 소중한 사람에게 보낸다", "scores": {"agreeableness": 7, "intimacy": 6, "extraversion": 5}},
+        {"text": "호수가에 앉아 조용히 명상한다", "scores": {"openness": 7, "extraversion": 2}},
+        {"text": "호수에 발을 담그고 놀아본다", "scores": {"openness": 8, "extraversion": 6}},
+        {"text": "이 풍경을 기억에 담고 빨리 다음 목적지로 간다", "scores": {"conscientiousness": 7, "neuroticism": 3}}
+      ],
+      "dimensions": ["openness", "extraversion", "agreeableness"],
+      "phase": 1,
+      "order": 17
+    },
+    {
+      "id": "B08",
+      "category": "behavior",
+      "narrative": "밤이 되었습니다. 모닥불 앞에 앉아 있습니다.",
+      "question": "모닥불을 바라보며 어떤 생각이 드나요?",
+      "choices": [
+        {"text": "오늘 하루 잘 보냈다 — 내일도 기대된다", "scores": {"attachment_secure": 7, "openness": 6, "neuroticism": 1}},
+        {"text": "집에 있는 사람들이 보고 싶다", "scores": {"agreeableness": 7, "attachment_anxious": 5, "intimacy": 6}},
+        {"text": "이런 고요함이 좋다 — 평소에 너무 시끄러웠다", "scores": {"extraversion": 2, "neuroticism": 4}},
+        {"text": "왜 이렇게 외로울까 — 사람이 그립다", "scores": {"neuroticism": 7, "attachment_anxious": 7}}
+      ],
+      "dimensions": ["neuroticism", "attachment_secure", "attachment_anxious"],
+      "phase": 1,
+      "order": 18
+    },
+    {
+      "id": "B09",
+      "category": "behavior",
+      "narrative": "모닥불 옆에 작은 상자가 있습니다. 안에 편지가 들어 있습니다. '당신에게'라고 적혀 있습니다.",
+      "question": "편지를 읽었을 때 가장 듣고 싶었던 말은?",
+      "choices": [
+        {"text": "넌 충분히 잘하고 있어", "scores": {"neuroticism": 6, "attachment_anxious": 5}},
+        {"text": "네가 어떤 선택을 해도 괜찮아", "scores": {"attachment_secure": 8, "openness": 5}},
+        {"text": "네 곁에 항상 있을게", "scores": {"intimacy": 8, "attachment_anxious": 6}},
+        {"text": "넌 혼자서도 충분히 강해", "scores": {"attachment_avoidant": 5, "conscientiousness": 6}}
+      ],
+      "dimensions": ["attachment_secure", "attachment_anxious", "attachment_avoidant"],
+      "phase": 1,
+      "order": 19
+    },
+    {
+      "id": "B10",
+      "category": "behavior",
+      "narrative": "아침이 밝았습니다. 오늘은 산을 넘어야 합니다. 날씨가 좋지 않습니다.",
+      "question": "당신은 어떻게 하나요?",
+      "choices": [
+        {"text": "날씨와 상관없이 출발한다 — 계획대로", "scores": {"conscientiousness": 9, "neuroticism": 2}},
+        {"text": "날씨가 나아질 때까지 기다린다", "scores": {"conscientiousness": 6, "neuroticism": 5}},
+        {"text": "다른 길을 찾아본다", "scores": {"openness": 7, "conscientiousness": 5}},
+        {"text": "오늘은 쉬기로 한다 — 무리하면 안 된다", "scores": {"neuroticism": 4, "attachment_secure": 5}}
+      ],
+      "dimensions": ["conscientiousness", "neuroticism"],
+      "phase": 1,
+      "order": 20
+    },
+    {
+      "id": "R01",
+      "category": "relationship",
+      "narrative": "산을 넘어 새로운 마을에 도착했습니다. 마을에서 한 사람이 당신에게 호감을 보입니다.",
+      "question": "호감을 느끼는 상대가 다가올 때, 당신의 첫 반응은?",
+      "choices": [
+        {"text": "반갑게 맞이하고 대화를 이어간다", "scores": {"extraversion": 8, "attachment_secure": 7}},
+        {"text": "좋지만 조금 경계하게 된다", "scores": {"attachment_avoidant": 6, "neuroticism": 5}},
+        {"text": "두근거리면서도 혹시 진심이 아닐까 걱정된다", "scores": {"attachment_anxious": 8, "neuroticism": 6}},
+        {"text": "나를 왜 좋아하는지 이해가 안 된다", "scores": {"neuroticism": 7, "attachment_anxious": 5}}
+      ],
+      "dimensions": ["attachment_secure", "attachment_anxious", "attachment_avoidant"],
+      "phase": 1,
+      "order": 21
+    },
+    {
+      "id": "R02",
+      "category": "relationship",
+      "narrative": "그 사람과 함께 시간을 보내게 되었습니다. 점점 가까워지고 있습니다.",
+      "question": "관계가 깊어질 때, 당신은 어떤 느낌이 드나요?",
+      "choices": [
+        {"text": "행복하다 — 이런 연결감이 좋다", "scores": {"intimacy": 8, "attachment_secure": 7}},
+        {"text": "좋지만 불안하다 — 이게 오래갈까", "scores": {"attachment_anxious": 8, "neuroticism": 6}},
+        {"text": "좋지만 조금 답답하다 — 나만의 공간도 필요하다", "scores": {"attachment_avoidant": 7, "extraversion": 3}},
+        {"text": "상대가 나를 진짜 아는 게 두렵다", "scores": {"attachment_avoidant": 8, "neuroticism": 7}}
+      ],
+      "dimensions": ["intimacy", "attachment_secure", "attachment_anxious", "attachment_avoidant"],
+      "phase": 1,
+      "order": 22
+    },
+    {
+      "id": "R03",
+      "category": "relationship",
+      "narrative": "상대방과 의견 충돌이 생겼습니다. 서로 다른 길로 가고 싶어 합니다.",
+      "question": "갈등 상황에서 당신은 어떻게 하나요?",
+      "choices": [
+        {"text": "바로 대화로 풀려고 한다 — 말해야 해결된다", "scores": {"extraversion": 7, "agreeableness": 6, "attachment_secure": 5}},
+        {"text": "시간을 두고 생각한 후 이야기한다", "scores": {"conscientiousness": 7, "attachment_avoidant": 4}},
+        {"text": "상대 의견을 따른다 — 싸우기 싫다", "scores": {"agreeableness": 8, "attachment_anxious": 6, "neuroticism": 5}},
+        {"text": "거리를 둔다 — 혼자 정리가 필요하다", "scores": {"attachment_avoidant": 8, "extraversion": 1}}
+      ],
+      "dimensions": ["agreeableness", "attachment_secure", "attachment_avoidant", "attachment_anxious"],
+      "phase": 1,
+      "order": 23
+    },
+    {
+      "id": "R04",
+      "category": "relationship",
+      "narrative": "상대방이 갑자기 연락이 안 됩니다. 아무 설명 없이 사라졌습니다.",
+      "question": "이 상황에서 당신의 반응은?",
+      "choices": [
+        {"text": "계속 연락을 시도한다 — 무슨 일이 있는지 걱정된다", "scores": {"attachment_anxious": 9, "agreeableness": 6}},
+        {"text": "기다린다 — 사정이 있겠지", "scores": {"attachment_secure": 7, "conscientiousness": 5}},
+        {"text": "나도 거리를 둔다 — 관심 없으면 나도 없다", "scores": {"attachment_avoidant": 8, "neuroticism": 4}},
+        {"text": "내가 뭘 잘못했나 되돌아본다", "scores": {"neuroticism": 8, "attachment_anxious": 7}}
+      ],
+      "dimensions": ["attachment_secure", "attachment_anxious", "attachment_avoidant"],
+      "phase": 1,
+      "order": 24
+    },
+    {
+      "id": "R05",
+      "category": "relationship",
+      "narrative": "상대방이 돌아와서 사과합니다. 사정이 있었다고 합니다.",
+      "question": "당신은 어떻게 받아들이나요?",
+      "choices": [
+        {"text": "이해한다 — 다시 만나서 기쁘다", "scores": {"agreeableness": 8, "attachment_secure": 7}},
+        {"text": "이해하지만 같은 일이 반복될까 불안하다", "scores": {"attachment_anxious": 7, "neuroticism": 6}},
+        {"text": "받아들이기 어렵다 — 신뢰가 깨졌다", "scores": {"attachment_avoidant": 6, "neuroticism": 5}},
+        {"text": "표면적으로 괜찮다고 하지만 속으로는 서운하다", "scores": {"neuroticism": 7, "agreeableness": 5, "attachment_anxious": 5}}
+      ],
+      "dimensions": ["agreeableness", "attachment_secure", "attachment_anxious"],
+      "phase": 1,
+      "order": 25
+    },
+    {
+      "id": "R06",
+      "category": "relationship",
+      "narrative": "상대방이 당신에게 진심을 고백합니다. '당신이 정말 좋다'고 말합니다.",
+      "question": "이 순간 당신의 마음은?",
+      "choices": [
+        {"text": "나도 좋다 — 솔직하게 말한다", "scores": {"attachment_secure": 9, "passion": 7, "extraversion": 6}},
+        {"text": "너무 좋지만 이게 진짜인지 의심된다", "scores": {"attachment_anxious": 7, "neuroticism": 6}},
+        {"text": "부담스럽다 — 너무 빠르다", "scores": {"attachment_avoidant": 8, "passion": 3}},
+        {"text": "감동받았지만 먼저 더 알아가고 싶다", "scores": {"conscientiousness": 7, "openness": 5, "intimacy": 5}}
+      ],
+      "dimensions": ["attachment_secure", "attachment_anxious", "attachment_avoidant", "passion"],
+      "phase": 1,
+      "order": 26
+    },
+    {
+      "id": "R07",
+      "category": "relationship",
+      "narrative": "둘이 함께 여행을 계속하고 있습니다. 하지만 때때로 혼자 있고 싶을 때가 있습니다.",
+      "question": "혼자 시간이 필요할 때 어떻게 말하나요?",
+      "choices": [
+        {"text": "솔직하게 '잠깐 혼자 있고 싶다'고 말한다", "scores": {"attachment_secure": 8, "extraversion": 4}},
+        {"text": "말하기 어려워서 참는다", "scores": {"attachment_anxious": 6, "neuroticism": 6, "agreeableness": 7}},
+        {"text": "자연스럽게 거리를 둔다 — 굳이 말 안 해도", "scores": {"attachment_avoidant": 7, "extraversion": 2}},
+        {"text": "혼자 있고 싶다는 생각이 드는 것 자체가 미안하다", "scores": {"attachment_anxious": 8, "neuroticism": 7}}
+      ],
+      "dimensions": ["attachment_secure", "attachment_anxious", "attachment_avoidant"],
+      "phase": 1,
+      "order": 27
+    },
+    {
+      "id": "R08",
+      "category": "relationship",
+      "narrative": "여행 중 큰 위기가 닥쳤습니다. 폭풍이 몰아칩니다.",
+      "question": "위기 상황에서 당신과 상대방의 관계는?",
+      "choices": [
+        {"text": "서로 의지하며 함께 극복한다", "scores": {"intimacy": 9, "commitment": 7, "attachment_secure": 7}},
+        {"text": "내가 주도적으로 해결하고 상대를 보호한다", "scores": {"conscientiousness": 8, "commitment": 6}},
+        {"text": "각자 알아서 하는 게 효율적이다", "scores": {"attachment_avoidant": 7, "conscientiousness": 6}},
+        {"text": "상대가 날 지켜주길 바란다", "scores": {"attachment_anxious": 7, "neuroticism": 5}}
+      ],
+      "dimensions": ["intimacy", "commitment", "attachment_secure", "attachment_avoidant"],
+      "phase": 1,
+      "order": 28
+    },
+    {
+      "id": "R09",
+      "category": "relationship",
+      "narrative": "폭풍이 지나고, 서로에 대해 더 깊이 알게 되었습니다.",
+      "question": "관계에서 가장 중요한 것은 무엇이라고 느끼나요?",
+      "choices": [
+        {"text": "서로를 깊이 이해하는 것", "scores": {"intimacy": 9, "openness": 7}},
+        {"text": "함께 있을 때 느끼는 설렘", "scores": {"passion": 9, "extraversion": 5}},
+        {"text": "어떤 상황에서도 함께하겠다는 약속", "scores": {"commitment": 9, "conscientiousness": 6}},
+        {"text": "서로의 자유를 존중하는 것", "scores": {"openness": 8, "attachment_avoidant": 4}}
+      ],
+      "dimensions": ["intimacy", "passion", "commitment"],
+      "phase": 1,
+      "order": 29
+    },
+    {
+      "id": "R10",
+      "category": "relationship",
+      "narrative": "마을 장로가 말합니다. '진정한 사랑은 무엇이라 생각하시오?'",
+      "question": "당신의 대답은?",
+      "choices": [
+        {"text": "서로의 약점까지 받아들이는 것", "scores": {"intimacy": 8, "agreeableness": 8, "attachment_secure": 6}},
+        {"text": "함께 있으면 심장이 뛰는 것", "scores": {"passion": 9, "neuroticism": 4}},
+        {"text": "오래도록 곁에 있겠다는 선택", "scores": {"commitment": 9, "conscientiousness": 7}},
+        {"text": "상대를 통해 나 자신을 발견하는 것", "scores": {"openness": 8, "intimacy": 6}}
+      ],
+      "dimensions": ["intimacy", "passion", "commitment"],
+      "phase": 1,
+      "order": 30
+    },
+    {
+      "id": "X01",
+      "category": "experience",
+      "narrative": "여행의 마지막 구간입니다. 과거의 기억이 떠오르는 마법의 호수에 도착했습니다.",
+      "question": "가장 먼저 떠오르는 기억은 어떤 것인가요?",
+      "choices": [
+        {"text": "행복했던 순간 — 사랑하는 사람과 함께한 때", "scores": {"intimacy": 7, "attachment_secure": 6}},
+        {"text": "아팠던 순간 — 누군가에게 상처받았던 때", "scores": {"neuroticism": 7, "attachment_anxious": 6}},
+        {"text": "자랑스러웠던 순간 — 뭔가를 해냈을 때", "scores": {"conscientiousness": 7, "extraversion": 5}},
+        {"text": "외로웠던 순간 — 아무도 없었던 때", "scores": {"neuroticism": 6, "attachment_avoidant": 5}}
+      ],
+      "dimensions": ["neuroticism", "attachment_secure", "attachment_anxious"],
+      "phase": 1,
+      "order": 31
+    },
+    {
+      "id": "X02",
+      "category": "experience",
+      "narrative": "호수가 물어봅니다. '당신이 가장 후회하는 것은 무엇인가요?'",
+      "question": "가장 큰 후회는?",
+      "choices": [
+        {"text": "솔직하지 못했던 것 — 마음을 표현하지 못한 순간들", "scores": {"neuroticism": 6, "attachment_anxious": 5, "intimacy": 5}},
+        {"text": "너무 쉽게 포기했던 것 — 더 노력할 수 있었는데", "scores": {"conscientiousness": 6, "neuroticism": 5}},
+        {"text": "다른 사람의 기대에 맞추려 했던 것", "scores": {"agreeableness": 7, "attachment_anxious": 6}},
+        {"text": "나 자신을 돌보지 못했던 것", "scores": {"neuroticism": 7, "attachment_secure": 4}}
+      ],
+      "dimensions": ["neuroticism", "conscientiousness", "attachment_anxious"],
+      "phase": 1,
+      "order": 32
+    },
+    {
+      "id": "X03",
+      "category": "experience",
+      "narrative": "호수가 다시 물어봅니다. '당신이 가장 감사한 것은 무엇인가요?'",
+      "question": "가장 감사한 것은?",
+      "choices": [
+        {"text": "나를 사랑해준 사람들", "scores": {"agreeableness": 8, "intimacy": 7, "attachment_secure": 5}},
+        {"text": "힘든 시간을 버텨낸 나 자신", "scores": {"conscientiousness": 7, "attachment_secure": 7}},
+        {"text": "새로운 경험을 할 수 있었던 기회", "scores": {"openness": 8, "extraversion": 5}},
+        {"text": "지금 이 순간 여기 있는 것", "scores": {"openness": 6, "attachment_secure": 8}}
+      ],
+      "dimensions": ["agreeableness", "openness", "attachment_secure"],
+      "phase": 1,
+      "order": 33
+    },
+    {
+      "id": "X04",
+      "category": "experience",
+      "narrative": "호수의 표면이 잔잔해지고, 미래의 당신이 현재의 당신에게 말합니다.",
+      "question": "미래의 나에게 가장 바라는 것은?",
+      "choices": [
+        {"text": "더 솔직해지길 — 감정을 숨기지 말고", "scores": {"openness": 7, "attachment_secure": 6}},
+        {"text": "더 강해지길 — 흔들리지 않게", "scores": {"conscientiousness": 7, "neuroticism": 4}},
+        {"text": "더 사랑하길 — 나 자신도, 다른 사람도", "scores": {"agreeableness": 8, "intimacy": 7}},
+        {"text": "더 자유로워지길 — 남의 시선에서 벗어나서", "scores": {"openness": 8, "attachment_avoidant": 4}}
+      ],
+      "dimensions": ["openness", "conscientiousness", "agreeableness"],
+      "phase": 1,
+      "order": 34
+    },
+    {
+      "id": "X05",
+      "category": "experience",
+      "narrative": "여행이 끝나갑니다. 마지막 질문 전, 숲이 당신에게 속삭입니다.",
+      "question": "이 여행에서 가장 큰 깨달음은?",
+      "choices": [
+        {"text": "나는 생각보다 강한 사람이다", "scores": {"attachment_secure": 8, "conscientiousness": 6}},
+        {"text": "나는 사람이 필요한 사람이다", "scores": {"agreeableness": 7, "attachment_anxious": 5, "intimacy": 6}},
+        {"text": "나는 아직 나를 잘 모른다", "scores": {"openness": 8, "neuroticism": 5}},
+        {"text": "나는 변할 수 있는 사람이다", "scores": {"openness": 9, "attachment_secure": 5}}
+      ],
+      "dimensions": ["attachment_secure", "openness"],
+      "phase": 1,
+      "order": 35
+    },
+    {
+      "id": "P2_01",
+      "category": "relationship",
+      "narrative": "이제 당신과 상대방, 두 사람의 이야기입니다.",
+      "question": "연인과 주말에 시간이 생겼을 때, 가장 하고 싶은 것은?",
+      "choices": [
+        {"text": "함께 새로운 곳을 탐험하기", "scores": {"passion": 7, "openness": 8}},
+        {"text": "집에서 편하게 쉬며 대화하기", "scores": {"intimacy": 8, "agreeableness": 6}},
+        {"text": "각자 하고 싶은 것을 하다가 저녁에 만나기", "scores": {"attachment_avoidant": 5, "openness": 5}},
+        {"text": "함께 무언가를 만들거나 요리하기", "scores": {"commitment": 6, "intimacy": 6, "conscientiousness": 5}}
+      ],
+      "dimensions": ["passion", "intimacy", "commitment"],
+      "phase": 2,
+      "order": 36
+    },
+    {
+      "id": "P2_02",
+      "category": "relationship",
+      "narrative": "연인이 힘든 하루를 보냈다고 합니다.",
+      "question": "당신은 어떻게 위로하나요?",
+      "choices": [
+        {"text": "조용히 안아준다 — 말보다 행동으로", "scores": {"intimacy": 8, "agreeableness": 7}},
+        {"text": "이야기를 다 들어준다 — 공감이 먼저", "scores": {"agreeableness": 9, "intimacy": 7}},
+        {"text": "해결책을 같이 찾아본다 — 도움이 되고 싶다", "scores": {"conscientiousness": 7, "commitment": 6}},
+        {"text": "혼자 정리할 시간을 준다 — 공간이 필요할 수 있으니까", "scores": {"attachment_avoidant": 5, "openness": 5}}
+      ],
+      "dimensions": ["intimacy", "agreeableness", "commitment"],
+      "phase": 2,
+      "order": 37
+    },
+    {
+      "id": "P2_03",
+      "category": "relationship",
+      "narrative": "연인과 중요한 결정을 함께 해야 합니다 (이사, 직장 변경 등).",
+      "question": "결정 과정에서 당신의 스타일은?",
+      "choices": [
+        {"text": "함께 장단점을 분석하고 논의한다", "scores": {"conscientiousness": 8, "commitment": 7, "intimacy": 5}},
+        {"text": "상대 의견을 먼저 듣고 맞춘다", "scores": {"agreeableness": 8, "attachment_anxious": 5}},
+        {"text": "내 의견을 먼저 말하고 조율한다", "scores": {"extraversion": 7, "conscientiousness": 6}},
+        {"text": "결정을 미룬다 — 아직 준비가 안 됐다", "scores": {"neuroticism": 6, "commitment": 3}}
+      ],
+      "dimensions": ["conscientiousness", "commitment", "agreeableness"],
+      "phase": 2,
+      "order": 38
+    },
+    {
+      "id": "P2_04",
+      "category": "relationship",
+      "narrative": "연인이 당신이 모르는 사이에 깜짝 선물을 준비했습니다.",
+      "question": "당신의 반응은?",
+      "choices": [
+        {"text": "감동받아서 바로 표현한다 — 너무 좋다!", "scores": {"extraversion": 8, "passion": 7, "intimacy": 6}},
+        {"text": "감동받지만 표현이 서툴다 — 마음은 큰데", "scores": {"neuroticism": 4, "attachment_avoidant": 5}},
+        {"text": "고맙지만 왜 이런 걸 했을까 의아하다", "scores": {"attachment_avoidant": 6, "conscientiousness": 5}},
+        {"text": "너무 좋아서 바로 보답하고 싶다", "scores": {"agreeableness": 8, "passion": 6, "attachment_anxious": 4}}
+      ],
+      "dimensions": ["passion", "intimacy", "attachment_avoidant"],
+      "phase": 2,
+      "order": 39
+    },
+    {
+      "id": "P2_05",
+      "category": "relationship",
+      "narrative": "연인과 작은 말다툼 후, 서먹한 분위기입니다.",
+      "question": "이때 당신은 보통 어떻게 하나요?",
+      "choices": [
+        {"text": "먼저 다가가서 화해를 시도한다", "scores": {"agreeableness": 8, "attachment_secure": 7, "intimacy": 6}},
+        {"text": "상대가 먼저 말해주길 기다린다", "scores": {"attachment_anxious": 6, "neuroticism": 5}},
+        {"text": "시간이 지나면 자연스럽게 풀리겠지", "scores": {"attachment_avoidant": 6, "conscientiousness": 4}},
+        {"text": "내가 잘못한 건지 계속 생각한다", "scores": {"neuroticism": 8, "attachment_anxious": 7}}
+      ],
+      "dimensions": ["agreeableness", "attachment_secure", "attachment_anxious"],
+      "phase": 2,
+      "order": 40
+    },
+    {
+      "id": "P2_06",
+      "category": "relationship",
+      "narrative": "연인의 친구 모임에 초대받았습니다.",
+      "question": "당신의 반응은?",
+      "choices": [
+        {"text": "기꺼이 간다 — 상대의 세계를 알고 싶다", "scores": {"extraversion": 7, "intimacy": 7, "openness": 6}},
+        {"text": "가긴 하지만 좀 긴장된다", "scores": {"neuroticism": 5, "agreeableness": 6}},
+        {"text": "가고 싶지 않다 — 내 시간이 필요하다", "scores": {"extraversion": 1, "attachment_avoidant": 6}},
+        {"text": "간다면 상대 옆에 꼭 붙어있고 싶다", "scores": {"attachment_anxious": 7, "neuroticism": 5}}
+      ],
+      "dimensions": ["extraversion", "intimacy", "attachment_avoidant", "attachment_anxious"],
+      "phase": 2,
+      "order": 41
+    },
+    {
+      "id": "P2_07",
+      "category": "relationship",
+      "narrative": "연인과 함께 미래에 대해 이야기하고 있습니다.",
+      "question": "미래 이야기를 할 때 당신의 느낌은?",
+      "choices": [
+        {"text": "설레고 기대된다 — 함께 만들어가고 싶다", "scores": {"commitment": 9, "passion": 6, "attachment_secure": 6}},
+        {"text": "좋지만 불안하다 — 변하면 어쩌지", "scores": {"commitment": 5, "attachment_anxious": 7, "neuroticism": 6}},
+        {"text": "부담스럽다 — 지금 현재가 중요하다", "scores": {"commitment": 2, "attachment_avoidant": 7}},
+        {"text": "진지하게 계획을 세우고 싶다", "scores": {"commitment": 8, "conscientiousness": 8}}
+      ],
+      "dimensions": ["commitment", "attachment_secure", "attachment_anxious", "attachment_avoidant"],
+      "phase": 2,
+      "order": 42
+    },
+    {
+      "id": "P2_08",
+      "category": "relationship",
+      "narrative": "연인이 '우리 관계에서 뭐가 가장 좋아?'라고 물어봅니다.",
+      "question": "당신의 대답은?",
+      "choices": [
+        {"text": "네가 나를 이해해주는 것", "scores": {"intimacy": 9, "attachment_secure": 6}},
+        {"text": "함께 있을 때 느끼는 설렘과 즐거움", "scores": {"passion": 9, "extraversion": 5}},
+        {"text": "어떤 일이 있어도 곁에 있어줄 거라는 믿음", "scores": {"commitment": 9, "attachment_secure": 7}},
+        {"text": "솔직히 말로 표현하기 어렵다", "scores": {"attachment_avoidant": 6, "neuroticism": 4}}
+      ],
+      "dimensions": ["intimacy", "passion", "commitment"],
+      "phase": 2,
+      "order": 43
+    },
+    {
+      "id": "P2_09",
+      "category": "relationship",
+      "narrative": "연인이 중요한 약속을 깜빡 잊었습니다.",
+      "question": "당신의 반응은?",
+      "choices": [
+        {"text": "속상하지만 이해한다 — 누구나 실수할 수 있다", "scores": {"agreeableness": 8, "attachment_secure": 7}},
+        {"text": "많이 서운하고 속상하다 — 나를 중요하게 생각 안 하나", "scores": {"attachment_anxious": 8, "neuroticism": 7}},
+        {"text": "별로 신경 안 쓴다 — 그럴 수도 있지", "scores": {"attachment_avoidant": 5, "agreeableness": 4}},
+        {"text": "서운하다고 말한다 — 표현해야 알지", "scores": {"attachment_secure": 6, "extraversion": 6, "agreeableness": 5}}
+      ],
+      "dimensions": ["agreeableness", "attachment_secure", "attachment_anxious"],
+      "phase": 2,
+      "order": 44
+    },
+    {
+      "id": "P2_10",
+      "category": "relationship",
+      "narrative": "연인과의 관계에서 당신이 진짜 원하는 것을 떠올려봅니다.",
+      "question": "연인에게 가장 받고 싶은 것은?",
+      "choices": [
+        {"text": "무조건적인 수용 — 있는 그대로의 나를", "scores": {"intimacy": 8, "attachment_secure": 7, "agreeableness": 6}},
+        {"text": "뜨거운 사랑 — 매일이 설레는 관계", "scores": {"passion": 9, "attachment_anxious": 4}},
+        {"text": "안정감 — 흔들리지 않는 믿음", "scores": {"commitment": 8, "attachment_secure": 8}},
+        {"text": "성장 — 서로가 더 나은 사람이 되는 관계", "scores": {"openness": 8, "conscientiousness": 6, "commitment": 5}}
+      ],
+      "dimensions": ["intimacy", "passion", "commitment"],
+      "phase": 2,
+      "order": 45
+    },
+    {
+      "id": "F01",
+      "category": "experience",
+      "narrative": "여행의 마지막입니다. 숲의 출구에 도착했습니다.",
+      "question": "뒤를 돌아보며 이 여행에서 가장 기억에 남는 것은?",
+      "choices": [
+        {"text": "새로운 사람을 만났던 순간", "scores": {"extraversion": 7, "agreeableness": 6}},
+        {"text": "어려운 상황을 극복했던 순간", "scores": {"conscientiousness": 8, "attachment_secure": 5}},
+        {"text": "아름다운 풍경 앞에서 느꼈던 감정", "scores": {"openness": 8, "neuroticism": 4}},
+        {"text": "나 자신과 대화했던 조용한 시간", "scores": {"openness": 7, "extraversion": 2}}
+      ],
+      "dimensions": ["extraversion", "openness", "conscientiousness"],
+      "phase": 1,
+      "order": 46
+    },
+    {
+      "id": "F02",
+      "category": "experience",
+      "narrative": "숲이 마지막으로 물어봅니다.",
+      "question": "이 여행을 통해 나에게 해주고 싶은 말이 있다면?",
+      "choices": [
+        {"text": "수고했어, 넌 잘하고 있어", "scores": {"attachment_secure": 8, "agreeableness": 6}},
+        {"text": "좀 더 나 자신을 믿어도 괜찮아", "scores": {"neuroticism": 5, "attachment_secure": 7}},
+        {"text": "사람들에게 더 마음을 열어봐", "scores": {"extraversion": 6, "agreeableness": 7, "attachment_anxious": 4}},
+        {"text": "때로는 쉬어도 돼, 항상 달리지 않아도", "scores": {"neuroticism": 6, "conscientiousness": 4, "attachment_secure": 6}}
+      ],
+      "dimensions": ["attachment_secure", "neuroticism"],
+      "phase": 1,
+      "order": 47
+    },
+    {
+      "id": "F03",
+      "category": "experience",
+      "narrative": "숲을 나오니 햇살이 따뜻합니다. 앞에 두 갈래 길이 있습니다.",
+      "question": "지금 당장 하고 싶은 것은?",
+      "choices": [
+        {"text": "소중한 사람에게 전화하기", "scores": {"agreeableness": 8, "intimacy": 7, "extraversion": 6}},
+        {"text": "조용한 카페에서 오늘을 정리하기", "scores": {"conscientiousness": 7, "extraversion": 2, "openness": 5}},
+        {"text": "바다를 보러 가기 — 새로운 여행 시작", "scores": {"openness": 9, "extraversion": 6}},
+        {"text": "집으로 돌아가 쉬기 — 충분히 걸었으니까", "scores": {"neuroticism": 4, "attachment_secure": 6}}
+      ],
+      "dimensions": ["extraversion", "openness", "agreeableness"],
+      "phase": 1,
+      "order": 48
+    },
+    {
+      "id": "F04",
+      "category": "experience",
+      "narrative": "마지막 질문입니다. 당신의 여행 일기 마지막 페이지입니다.",
+      "question": "이 앱을 사용한 이유가 무엇인가요?",
+      "choices": [
+        {"text": "나 자신을 더 잘 알고 싶어서", "scores": {"openness": 8, "conscientiousness": 5}},
+        {"text": "관계에서 반복되는 문제를 이해하고 싶어서", "scores": {"neuroticism": 6, "attachment_anxious": 5, "intimacy": 5}},
+        {"text": "재미있어 보여서 — 가볍게 해봤다", "scores": {"openness": 5, "extraversion": 5}},
+        {"text": "누군가 나를 이해해주길 바라서", "scores": {"attachment_anxious": 7, "neuroticism": 6, "intimacy": 6}}
+      ],
+      "dimensions": ["openness", "neuroticism", "attachment_anxious"],
+      "phase": 1,
+      "order": 49
+    },
+    {
+      "id": "F05",
+      "category": "experience",
+      "narrative": "여행이 끝났습니다. 당신은 더 이상 숲 속에 있지 않습니다. 하지만 여행에서 발견한 것은 영원히 당신과 함께합니다.",
+      "question": "이 여행을 한 단어로 표현한다면?",
+      "choices": [
+        {"text": "발견", "scores": {"openness": 8, "attachment_secure": 5}},
+        {"text": "치유", "scores": {"neuroticism": 5, "attachment_secure": 7}},
+        {"text": "용기", "scores": {"conscientiousness": 7, "extraversion": 5}},
+        {"text": "연결", "scores": {"agreeableness": 8, "intimacy": 7}}
+      ],
+      "dimensions": ["openness", "agreeableness", "conscientiousness"],
+      "phase": 1,
+      "order": 50
+    }
+  ]
+}
