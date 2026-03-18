@@ -8,36 +8,81 @@
 </head>
 <body>
 
+<a class="skip-link" href="#main-content">본문으로 건너뛰기</a>
+
 <div class="header">
     <h1>MIROMI</h1>
     <p>나를 비추는 거울, 당신을 이해하게 만드는 앱</p>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="테마 전환" title="라이트/다크 모드 전환">
+        <span id="theme-icon">☀️</span>
+    </button>
 </div>
 
-<div class="container">
+<div class="container" id="main-content" role="main">
 
     <!-- HOME -->
     <div id="screen-home" class="screen active">
-        <div class="menu-card" onclick="startJourney()">
+        <div class="menu-card" onclick="showRelStatus()" tabindex="0" role="button"
+             aria-label="나를 찾아 떠나는 여행 시작" onkeydown="if(event.key==='Enter')showRelStatus()">
             <h3>나를 찾아 떠나는 여행</h3>
             <p>깊은 숲 속으로 떠나는 자기이해 여행.<br>당신의 성격, 관계 패턴, 사랑 스타일을 발견합니다.</p>
             <span class="tag">Phase 1 - 자기이해</span>
         </div>
-        <div class="menu-card" onclick="startCoupleGame()">
+        <div class="menu-card" onclick="startCoupleGame()" tabindex="0" role="button"
+             aria-label="커플 게임 시작" onkeydown="if(event.key==='Enter')startCoupleGame()">
             <h3>커플 게임</h3>
             <p>둘이서 함께 하는 관계 탐험 게임.<br>예측 게임, 밸런스 게임, 시크릿 카드, 챌린지 미션!</p>
             <span class="tag">Phase 2 - 함께</span>
         </div>
     </div>
 
+    <!-- RELATIONSHIP STATUS -->
+    <div id="screen-relstatus" class="screen">
+        <div class="rel-status-screen">
+            <h2>여행을 시작하기 전에</h2>
+            <p>현재 관계 상태를 알려주시면<br>더 맞춤화된 여행을 제공합니다.</p>
+            <div class="rel-status-options" id="rel-options" role="radiogroup" aria-label="관계 상태 선택">
+                <button class="rel-status-btn" data-value="single" role="radio" aria-checked="false"
+                        onclick="selectRelStatus(this)" onkeydown="handleRelKeydown(event, this)">
+                    <span class="status-icon">🧍</span>
+                    <span>싱글</span>
+                </button>
+                <button class="rel-status-btn" data-value="dating" role="radio" aria-checked="false"
+                        onclick="selectRelStatus(this)" onkeydown="handleRelKeydown(event, this)">
+                    <span class="status-icon">💕</span>
+                    <span>연애 중</span>
+                </button>
+                <button class="rel-status-btn" data-value="committed" role="radio" aria-checked="false"
+                        onclick="selectRelStatus(this)" onkeydown="handleRelKeydown(event, this)">
+                    <span class="status-icon">💑</span>
+                    <span>진지한 관계</span>
+                </button>
+                <button class="rel-status-btn" data-value="married" role="radio" aria-checked="false"
+                        onclick="selectRelStatus(this)" onkeydown="handleRelKeydown(event, this)">
+                    <span class="status-icon">💍</span>
+                    <span>결혼</span>
+                </button>
+                <button class="rel-status-btn" data-value="prefer_not_to_say" role="radio" aria-checked="false"
+                        onclick="selectRelStatus(this)" onkeydown="handleRelKeydown(event, this)">
+                    <span class="status-icon">🤫</span>
+                    <span>말하고 싶지 않아요</span>
+                </button>
+            </div>
+            <button class="btn btn-full" id="start-journey-btn" onclick="startJourney()" disabled
+                    aria-label="여행 시작하기">여행 시작하기</button>
+        </div>
+    </div>
+
     <!-- JOURNEY -->
-    <div id="screen-journey" class="screen">
+    <div id="screen-journey" class="screen" aria-live="polite">
+        <div class="category-label" id="category-label"></div>
         <div class="progress-text" id="progress-text">1 / 35</div>
-        <div class="progress-bar">
+        <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress-bar-el">
             <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
         </div>
-        <div class="narrative" id="narrative"></div>
+        <div class="narrative" id="narrative" aria-label="상황 설명"></div>
         <div class="question-text" id="question-text"></div>
-        <div id="choices"></div>
+        <div id="choices" role="group" aria-label="선택지"></div>
     </div>
 
     <!-- REPORT -->
@@ -45,35 +90,37 @@
         <h2 class="text-center mb-20" style="color: var(--primary-light)">여행이 끝났습니다</h2>
         <div id="report-content"></div>
         <div class="text-center mt-40">
-            <button class="btn btn-outline" onclick="goHome()">처음으로</button>
+            <button class="btn btn-outline" onclick="goHome()" aria-label="처음으로 돌아가기">처음으로</button>
         </div>
     </div>
 
     <!-- COUPLE GAME -->
     <div id="screen-couple" class="screen">
-        <div class="game-tabs">
-            <div class="game-tab active" data-tab="balance" onclick="switchTab('balance')">밸런스 게임</div>
-            <div class="game-tab" data-tab="predict" onclick="switchTab('predict')">예측 게임</div>
-            <div class="game-tab" data-tab="challenge" onclick="switchTab('challenge')">챌린지</div>
+        <div class="game-tabs" role="tablist" aria-label="게임 탭">
+            <div class="game-tab active" data-tab="balance" onclick="switchTab('balance')"
+                 role="tab" aria-selected="true" tabindex="0"
+                 onkeydown="if(event.key==='Enter')switchTab('balance')">밸런스 게임</div>
+            <div class="game-tab" data-tab="predict" onclick="switchTab('predict')"
+                 role="tab" aria-selected="false" tabindex="0"
+                 onkeydown="if(event.key==='Enter')switchTab('predict')">예측 게임</div>
+            <div class="game-tab" data-tab="challenge" onclick="switchTab('challenge')"
+                 role="tab" aria-selected="false" tabindex="0"
+                 onkeydown="if(event.key==='Enter')switchTab('challenge')">챌린지</div>
         </div>
 
-        <!-- Balance Game -->
-        <div id="tab-balance" class="tab-content">
-            <p class="text-center mb-20" style="color: var(--text-dim)">같은 선택을 하면 싱크로율이 올라갑니다!</p>
-            <div id="balance-questions"></div>
-            <div class="text-center mt-20">
-                <button class="btn btn-accent btn-full" onclick="submitBalance()">싱크로율 확인하기</button>
-            </div>
+        <!-- Balance Game (Turn-Taking) -->
+        <div id="tab-balance" class="tab-content" role="tabpanel" aria-label="밸런스 게임">
+            <div id="balance-game-area"></div>
         </div>
 
         <!-- Predict Game -->
-        <div id="tab-predict" class="tab-content" style="display:none">
+        <div id="tab-predict" class="tab-content" style="display:none" role="tabpanel" aria-label="예측 게임">
             <p class="text-center mb-20" style="color: var(--text-dim)">상대방의 선택을 맞춰보세요!</p>
             <div id="predict-questions"></div>
         </div>
 
         <!-- Challenge -->
-        <div id="tab-challenge" class="tab-content" style="display:none">
+        <div id="tab-challenge" class="tab-content" style="display:none" role="tabpanel" aria-label="챌린지">
             <p class="text-center mb-20" style="color: var(--text-dim)">오늘의 챌린지 미션</p>
             <div id="challenge-list"></div>
         </div>
@@ -84,207 +131,755 @@
         <h2 class="text-center mb-20" style="color: var(--primary-light)">커플 결과</h2>
         <div id="couple-result-content"></div>
         <div class="text-center mt-40">
-            <button class="btn btn-outline" onclick="goHome()">처음으로</button>
+            <button class="btn btn-outline" onclick="goHome()" aria-label="처음으로 돌아가기">처음으로</button>
         </div>
     </div>
 </div>
 
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loading-overlay" aria-hidden="true" role="alert">
+    <div class="loading-spinner"></div>
+    <div class="loading-text" id="loading-text">잠시만 기다려주세요...</div>
+</div>
+
+<!-- Phase Transition Overlay -->
+<div class="phase-overlay" id="phase-overlay" aria-hidden="true">
+    <h2 id="phase-title"></h2>
+    <div class="phase-divider"></div>
+    <p id="phase-description"></p>
+</div>
+
+<!-- Error Toast -->
+<div class="error-toast" id="error-toast" role="alert" aria-live="assertive"></div>
+
+<!-- Confetti Container -->
+<div class="confetti-container" id="confetti-container" aria-hidden="true"></div>
+
 <script>
+// ═══════════════════════════════════════════════════
+// MIROMI Frontend v2.0
+// ═══════════════════════════════════════════════════
+
 let sessionId = null;
 let coupleData = null;
+let selectedRelStatus = null;
+let lastCategory = null;
+let focusedChoiceIndex = -1;
+
+// ──── Theme Toggle ────
+
+function toggleTheme() {
+    const html = document.documentElement;
+    const current = html.getAttribute('data-theme');
+    if (current === 'light') {
+        html.setAttribute('data-theme', 'dark');
+        localStorage.setItem('miromi-theme', 'dark');
+        document.getElementById('theme-icon').textContent = '☀️';
+    } else {
+        html.setAttribute('data-theme', 'light');
+        localStorage.setItem('miromi-theme', 'light');
+        document.getElementById('theme-icon').textContent = '🌙';
+    }
+}
+
+function initTheme() {
+    const saved = localStorage.getItem('miromi-theme');
+    if (saved) {
+        document.documentElement.setAttribute('data-theme', saved);
+        document.getElementById('theme-icon').textContent = saved === 'light' ? '🌙' : '☀️';
+    } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+        document.documentElement.setAttribute('data-theme', 'light');
+        document.getElementById('theme-icon').textContent = '🌙';
+    }
+}
+
+initTheme();
+
+// ──── Loading ────
+
+function showLoading(text) {
+    const overlay = document.getElementById('loading-overlay');
+    document.getElementById('loading-text').textContent = text || '잠시만 기다려주세요...';
+    overlay.classList.add('active');
+    overlay.setAttribute('aria-hidden', 'false');
+}
+
+function hideLoading() {
+    const overlay = document.getElementById('loading-overlay');
+    overlay.classList.remove('active');
+    overlay.setAttribute('aria-hidden', 'true');
+}
+
+// ──── Error Toast ────
+
+let errorTimer = null;
+
+function showError(message) {
+    const toast = document.getElementById('error-toast');
+    toast.textContent = message;
+    toast.classList.add('visible');
+    if (errorTimer) clearTimeout(errorTimer);
+    errorTimer = setTimeout(() => {
+        toast.classList.remove('visible');
+    }, 4000);
+}
 
 // ──── Navigation ────
 
 function showScreen(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById('screen-' + id).classList.add('active');
+    const target = document.getElementById('screen-' + id);
+    target.classList.add('active');
+    // Focus management
+    const firstFocusable = target.querySelector('button, [tabindex="0"], input, a');
+    if (firstFocusable) {
+        setTimeout(() => firstFocusable.focus(), 100);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function goHome() {
+    sessionId = null;
+    coupleData = null;
+    selectedRelStatus = null;
+    lastCategory = null;
     showScreen('home');
 }
 
 function switchTab(tab) {
-    document.querySelectorAll('.game-tab').forEach(t => t.classList.remove('active'));
-    document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+    document.querySelectorAll('.game-tab').forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+    });
+    const activeTab = document.querySelector(`[data-tab="${tab}"]`);
+    activeTab.classList.add('active');
+    activeTab.setAttribute('aria-selected', 'true');
     document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
     document.getElementById('tab-' + tab).style.display = 'block';
+}
+
+// ──── Relationship Status ────
+
+function showRelStatus() {
+    showScreen('relstatus');
+}
+
+function selectRelStatus(el) {
+    document.querySelectorAll('.rel-status-btn').forEach(b => {
+        b.classList.remove('selected');
+        b.setAttribute('aria-checked', 'false');
+    });
+    el.classList.add('selected');
+    el.setAttribute('aria-checked', 'true');
+    selectedRelStatus = el.dataset.value;
+    document.getElementById('start-journey-btn').disabled = false;
+}
+
+function handleRelKeydown(e, el) {
+    const btns = Array.from(document.querySelectorAll('.rel-status-btn'));
+    const idx = btns.indexOf(el);
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        const next = btns[(idx + 1) % btns.length];
+        next.focus();
+        selectRelStatus(next);
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const prev = btns[(idx - 1 + btns.length) % btns.length];
+        prev.focus();
+        selectRelStatus(prev);
+    } else if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        selectRelStatus(el);
+    }
 }
 
 // ──── Phase 1: Journey ────
 
 async function startJourney() {
-    const res = await fetch('/api/start', { method: 'POST' });
-    const data = await res.json();
-    sessionId = data.session_id;
-    renderQuestion(data.question, data.progress);
-    showScreen('journey');
+    if (!selectedRelStatus) return;
+    showLoading('여행을 준비하고 있어요...');
+    try {
+        const res = await fetch('/api/start', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ relationship_status: selectedRelStatus }),
+        });
+        if (!res.ok) throw new Error('서버 오류가 발생했습니다.');
+        const data = await res.json();
+        sessionId = data.session_id;
+        lastCategory = null;
+        renderQuestion(data.question, data.progress);
+        hideLoading();
+        showScreen('journey');
+    } catch (err) {
+        hideLoading();
+        showError(err.message || '여행을 시작할 수 없습니다. 다시 시도해주세요.');
+    }
 }
+
+const categoryLabels = {
+    emotion: '감정',
+    values: '가치관',
+    behavior: '행동',
+    relationship: '관계',
+    experience: '경험',
+};
 
 function renderQuestion(q, progress) {
     document.getElementById('progress-text').textContent = `${progress.current} / ${progress.total}`;
-    document.getElementById('progress-fill').style.width = `${(progress.current / progress.total) * 100}%`;
+    const pct = (progress.current / progress.total) * 100;
+    document.getElementById('progress-fill').style.width = `${pct}%`;
+    const bar = document.getElementById('progress-bar-el');
+    bar.setAttribute('aria-valuenow', Math.round(pct));
+
+    // Category label
+    const catLabel = document.getElementById('category-label');
+    catLabel.textContent = categoryLabels[q.category] || q.category;
+
     document.getElementById('narrative').textContent = q.narrative;
     document.getElementById('question-text').textContent = q.question;
 
     const choicesDiv = document.getElementById('choices');
     choicesDiv.innerHTML = '';
+    focusedChoiceIndex = -1;
+
     q.choices.forEach((c, i) => {
         const btn = document.createElement('button');
         btn.className = 'choice-btn';
         btn.textContent = c.text;
+        btn.setAttribute('aria-label', `선택지 ${i + 1}: ${c.text}`);
         btn.onclick = () => answerQuestion(i);
+        btn.onkeydown = (e) => handleChoiceKeydown(e, i, q.choices.length);
         choicesDiv.appendChild(btn);
+    });
+
+    // Focus first choice
+    const firstBtn = choicesDiv.querySelector('.choice-btn');
+    if (firstBtn) setTimeout(() => firstBtn.focus(), 150);
+}
+
+function handleChoiceKeydown(e, index, total) {
+    const btns = document.querySelectorAll('.choice-btn');
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        const next = (index + 1) % total;
+        btns[next].focus();
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const prev = (index - 1 + total) % total;
+        btns[prev].focus();
+    } else if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        answerQuestion(index);
+    }
+}
+
+async function showPhaseTransition(phaseIntro) {
+    return new Promise(resolve => {
+        const overlay = document.getElementById('phase-overlay');
+        document.getElementById('phase-title').textContent = phaseIntro;
+        document.getElementById('phase-description').textContent = '새로운 장이 시작됩니다...';
+        overlay.classList.add('active');
+        overlay.setAttribute('aria-hidden', 'false');
+        setTimeout(() => {
+            overlay.classList.remove('active');
+            overlay.setAttribute('aria-hidden', 'true');
+            resolve();
+        }, 2000);
     });
 }
 
 async function answerQuestion(choiceIndex) {
     // Disable buttons
-    document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
-
-    const res = await fetch('/api/answer', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ session_id: sessionId, choice_index: choiceIndex }),
+    document.querySelectorAll('.choice-btn').forEach(b => {
+        b.disabled = true;
+        if (b === document.querySelectorAll('.choice-btn')[choiceIndex]) {
+            b.classList.add('selected');
+        }
     });
-    const data = await res.json();
 
-    if (data.complete) {
-        renderReport(data.report, data.scores);
-        showScreen('report');
-    } else {
-        renderQuestion(data.question, data.progress);
+    showLoading('응답을 처리하고 있어요...');
+
+    try {
+        const res = await fetch('/api/answer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ session_id: sessionId, choice_index: choiceIndex }),
+        });
+        if (!res.ok) throw new Error('답변을 처리할 수 없습니다.');
+        const data = await res.json();
+        hideLoading();
+
+        if (data.complete) {
+            await showProcessingScreen();
+            renderReport(data.report, data.scores, data.confidences);
+            showScreen('report');
+            triggerConfetti();
+        } else {
+            // Phase transition check
+            const newCategory = data.question.category;
+            if (lastCategory && newCategory !== lastCategory && data.question.phase_intro) {
+                await showPhaseTransition(data.question.phase_intro);
+            }
+            lastCategory = newCategory;
+            renderQuestion(data.question, data.progress);
+        }
+    } catch (err) {
+        hideLoading();
+        showError(err.message || '오류가 발생했습니다. 다시 시도해주세요.');
+        // Re-enable buttons
+        document.querySelectorAll('.choice-btn').forEach(b => {
+            b.disabled = false;
+            b.classList.remove('selected');
+        });
     }
 }
 
-function renderReport(report, scores) {
+// ──── Processing Screen ────
+
+function showProcessingScreen() {
+    return new Promise(resolve => {
+        const el = document.getElementById('report-content');
+        el.innerHTML = `
+            <div class="processing-screen">
+                <h2>결과를 분석하고 있습니다...</h2>
+                <div class="processing-dots">
+                    <span></span><span></span><span></span>
+                </div>
+                <div class="processing-steps">
+                    <div class="step">성격 패턴 분석 중...</div>
+                    <div class="step">관계 스타일 매핑 중...</div>
+                    <div class="step">맞춤 리포트 생성 중...</div>
+                </div>
+            </div>
+        `;
+        showScreen('report');
+        setTimeout(resolve, 2500);
+    });
+}
+
+// ──── Confetti ────
+
+function triggerConfetti() {
+    const container = document.getElementById('confetti-container');
+    container.innerHTML = '';
+    const colors = ['#f472b6', '#a78bfa', '#60a5fa', '#34d399', '#fbbf24', '#f87171'];
+    for (let i = 0; i < 60; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.left = Math.random() * 100 + '%';
+        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDelay = Math.random() * 2 + 's';
+        piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+        piece.style.width = (6 + Math.random() * 8) + 'px';
+        piece.style.height = (6 + Math.random() * 8) + 'px';
+        piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        container.appendChild(piece);
+    }
+    setTimeout(() => { container.innerHTML = ''; }, 5000);
+}
+
+// ──── Report ────
+
+function renderReport(report, scores, confidences) {
     const el = document.getElementById('report-content');
     let html = '';
 
-    // Summary
-    html += `<div class="report-section"><h3>당신의 심리 프로파일</h3><p>${report.profile_summary}</p></div>`;
+    // Profile Summary
+    html += `<div class="report-section" style="animation-delay:0.1s">
+        <h3>당신의 심리 프로파일</h3>
+        <p>${report.profile_summary}</p>
+    </div>`;
 
-    // Score bars
+    // Big Five Score Bars (personality = blue)
     const bf = scores.big_five;
-    html += `<div class="report-section"><h3>성격 점수</h3><div class="score-bars">`;
+    html += `<div class="report-section section-personality" style="animation-delay:0.2s">
+        <div class="collapsible-header" onclick="toggleCollapse(this)" aria-expanded="true" role="button" tabindex="0"
+             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCollapse(this)}">
+            <h3>성격 점수 (Big Five)</h3>
+            <span class="collapsible-icon" aria-hidden="true">▼</span>
+        </div>
+        <div class="collapsible-body">
+            <div class="score-bars" id="score-bars-personality">`;
+
     const dims = [
-        ['외향성', bf.extraversion, 'ext'],
-        ['신경성', bf.neuroticism, 'neu'],
-        ['성실성', bf.conscientiousness, 'con'],
-        ['개방성', bf.openness, 'opn'],
-        ['친화성', bf.agreeableness, 'agr'],
+        ['외향성 (Extraversion)', bf.extraversion, 'ext'],
+        ['신경성 (Neuroticism)', bf.neuroticism, 'neu'],
+        ['성실성 (Conscientiousness)', bf.conscientiousness, 'con'],
+        ['개방성 (Openness)', bf.openness, 'opn'],
+        ['친화성 (Agreeableness)', bf.agreeableness, 'agr'],
     ];
     dims.forEach(([label, val, cls]) => {
         html += `<div class="score-bar-item">
             <label><span>${label}</span><span>${Math.round(val)}%</span></label>
-            <div class="score-bar-bg"><div class="score-bar-val ${cls}" style="width:${val}%"></div></div>
+            <div class="score-bar-bg"><div class="score-bar-val ${cls}" data-target="${val}" style="width:0%"></div></div>
         </div>`;
     });
-    html += `</div></div>`;
+    html += `</div></div></div>`;
 
-    // Sections
-    report.sections.forEach(section => {
-        html += `<div class="report-section"><h3>${section.title}</h3><p>${section.summary}</p>`;
+    // Attachment Spectrum (pink)
+    const att = scores.attachment;
+    html += `<div class="report-section section-attachment" style="animation-delay:0.3s">
+        <div class="collapsible-header" onclick="toggleCollapse(this)" aria-expanded="true" role="button" tabindex="0"
+             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCollapse(this)}">
+            <h3>애착 스펙트럼</h3>
+            <span class="collapsible-icon" aria-hidden="true">▼</span>
+        </div>
+        <div class="collapsible-body">
+            <p style="margin-bottom:4px">유형: <strong style="color:var(--accent)">${att.dominant_type}</strong>
+            ${att.is_mixed ? ' (복합)' : ''}</p>
+            <p style="margin-bottom:16px;font-size:0.9rem">${att.blend}</p>
+            <div class="score-bars">
+                <div class="score-bar-item">
+                    <label><span>안정형 (Secure)</span><span>${Math.round(att.secure)}%</span></label>
+                    <div class="score-bar-bg"><div class="score-bar-val secure" data-target="${att.secure}" style="width:0%"></div></div>
+                </div>
+                <div class="score-bar-item">
+                    <label><span>불안형 (Anxious)</span><span>${Math.round(att.anxious)}%</span></label>
+                    <div class="score-bar-bg"><div class="score-bar-val anxious" data-target="${att.anxious}" style="width:0%"></div></div>
+                </div>
+                <div class="score-bar-item">
+                    <label><span>회피형 (Avoidant)</span><span>${Math.round(att.avoidant)}%</span></label>
+                    <div class="score-bar-bg"><div class="score-bar-val avoidant" data-target="${att.avoidant}" style="width:0%"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>`;
+
+    // Love Triangle (purple)
+    const lt = scores.love_triangle;
+    html += `<div class="report-section section-love" style="animation-delay:0.4s">
+        <div class="collapsible-header" onclick="toggleCollapse(this)" aria-expanded="true" role="button" tabindex="0"
+             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCollapse(this)}">
+            <h3>사랑의 삼각형</h3>
+            <span class="collapsible-icon" aria-hidden="true">▼</span>
+        </div>
+        <div class="collapsible-body">
+            <p style="margin-bottom:4px">사랑 유형: <strong style="color:var(--purple)">${lt.love_type}</strong></p>
+            <p style="margin-bottom:16px;font-size:0.9rem">가장 강한 축: ${lt.strongest} / 가장 약한 축: ${lt.weakest}</p>
+            <div class="score-bars">
+                <div class="score-bar-item">
+                    <label><span>친밀감 (Intimacy)</span><span>${Math.round(lt.intimacy)}%</span></label>
+                    <div class="score-bar-bg"><div class="score-bar-val intimacy" data-target="${lt.intimacy}" style="width:0%"></div></div>
+                </div>
+                <div class="score-bar-item">
+                    <label><span>열정 (Passion)</span><span>${Math.round(lt.passion)}%</span></label>
+                    <div class="score-bar-bg"><div class="score-bar-val passion" data-target="${lt.passion}" style="width:0%"></div></div>
+                </div>
+                <div class="score-bar-item">
+                    <label><span>헌신 (Commitment)</span><span>${Math.round(lt.commitment)}%</span></label>
+                    <div class="score-bar-bg"><div class="score-bar-val commitment" data-target="${lt.commitment}" style="width:0%"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>`;
+
+    // Report sections with insights (PRIMARY vs SECONDARY)
+    report.sections.forEach((section, si) => {
+        const sectionClass = si === 0 ? 'section-personality' : si === 1 ? 'section-attachment' : 'section-love';
+        html += `<div class="report-section ${sectionClass}" style="animation-delay:${0.5 + si * 0.1}s">
+            <div class="collapsible-header" onclick="toggleCollapse(this)" aria-expanded="true" role="button" tabindex="0"
+                 onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCollapse(this)}">
+                <h3>${section.icon || ''} ${section.title}</h3>
+                <span class="collapsible-icon" aria-hidden="true">▼</span>
+            </div>
+            <div class="collapsible-body">
+                <p>${section.summary}</p>`;
+
         section.insights.forEach(insight => {
-            html += `<div class="insight-card">
+            const priorityClass = insight.priority === 'primary' ? 'primary' : 'secondary';
+            html += `<div class="insight-card ${priorityClass}">
                 <h4>${insight.title}</h4>
                 <p>${insight.description}</p>
                 <p class="empathy">${insight.empathy_message}</p>
             </div>`;
         });
-        html += `</div>`;
+        html += `</div></div>`;
     });
 
+    // Tension insights (yellow warning)
+    if (report.tension_insights && report.tension_insights.length > 0) {
+        html += `<div class="report-section section-tension" style="animation-delay:0.8s">
+            <div class="collapsible-header" onclick="toggleCollapse(this)" aria-expanded="true" role="button" tabindex="0"
+                 onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCollapse(this)}">
+                <h3>내면의 갈등</h3>
+                <span class="collapsible-icon" aria-hidden="true">▼</span>
+            </div>
+            <div class="collapsible-body">`;
+        report.tension_insights.forEach(t => {
+            html += `<div class="insight-card tension">
+                <h4>${t.title}</h4>
+                <p>${t.description}</p>
+                <p class="empathy">${t.empathy_message}</p>
+            </div>`;
+        });
+        html += `</div></div>`;
+    }
+
     // Struggle
-    html += `<div class="report-section"><h3>당신이 힘든 이유</h3><p>${report.struggle_reason}</p></div>`;
+    html += `<div class="report-section" style="animation-delay:0.9s">
+        <h3>당신이 힘든 이유</h3>
+        <p>${report.struggle_reason}</p>
+    </div>`;
 
     // Comfort
-    html += `<div class="comfort-box">${report.comfort_message}</div>`;
+    html += `<div class="comfort-box" style="animation: slideUp 0.5s ease 1s both">${report.comfort_message}</div>`;
 
-    // Tips
-    if (report.action_tips.length > 0) {
-        html += `<div class="report-section"><h3>오늘부터 할 수 있는 것</h3><ul class="tip-list">`;
+    // Action Tips
+    if (report.action_tips && report.action_tips.length > 0) {
+        html += `<div class="report-section section-growth" style="animation-delay:1.1s">
+            <div class="collapsible-header" onclick="toggleCollapse(this)" aria-expanded="true" role="button" tabindex="0"
+                 onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCollapse(this)}">
+                <h3>오늘부터 할 수 있는 것</h3>
+                <span class="collapsible-icon" aria-hidden="true">▼</span>
+            </div>
+            <div class="collapsible-body">
+                <ul class="tip-list">`;
         report.action_tips.forEach(tip => {
             html += `<li>${tip}</li>`;
         });
-        html += `</ul></div>`;
+        html += `</ul></div></div>`;
+    }
+
+    // Action Plan (4-week timeline)
+    if (report.action_plan && report.action_plan.length > 0) {
+        html += `<div class="report-section section-growth" style="animation-delay:1.2s">
+            <div class="collapsible-header" onclick="toggleCollapse(this)" aria-expanded="true" role="button" tabindex="0"
+                 onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCollapse(this)}">
+                <h3>4주 액션 플랜</h3>
+                <span class="collapsible-icon" aria-hidden="true">▼</span>
+            </div>
+            <div class="collapsible-body">
+                <div class="action-timeline">`;
+        report.action_plan.forEach(step => {
+            html += `<div class="timeline-item">
+                <div class="week-label">${step.week}</div>
+                <div class="action-text">${step.action}</div>
+                <div class="action-reason">${step.reason}</div>
+            </div>`;
+        });
+        html += `</div></div></div>`;
+    }
+
+    // Growth Notes
+    if (report.growth_notes && report.growth_notes.length > 0) {
+        html += `<div class="report-section section-growth" style="animation-delay:1.3s">
+            <div class="collapsible-header" onclick="toggleCollapse(this)" aria-expanded="true" role="button" tabindex="0"
+                 onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleCollapse(this)}">
+                <h3>성장 노트</h3>
+                <span class="collapsible-icon" aria-hidden="true">▼</span>
+            </div>
+            <div class="collapsible-body">`;
+        report.growth_notes.forEach(note => {
+            html += `<div class="insight-card"><p>${note}</p></div>`;
+        });
+        html += `</div></div>`;
     }
 
     el.innerHTML = html;
+
+    // Animate score bars after render
+    requestAnimationFrame(() => {
+        setTimeout(() => {
+            document.querySelectorAll('.score-bar-val[data-target]').forEach(bar => {
+                bar.style.width = bar.dataset.target + '%';
+            });
+        }, 300);
+    });
 }
 
-// ──── Phase 2: Couple Game ────
+// ──── Collapsible ────
+
+function toggleCollapse(header) {
+    const body = header.nextElementSibling;
+    const isCollapsed = body.classList.contains('collapsed');
+    if (isCollapsed) {
+        body.classList.remove('collapsed');
+        header.classList.remove('collapsed');
+        header.setAttribute('aria-expanded', 'true');
+    } else {
+        body.classList.add('collapsed');
+        header.classList.add('collapsed');
+        header.setAttribute('aria-expanded', 'false');
+    }
+}
+
+// ──── Phase 2: Couple Game (Turn-Taking) ────
+
+let balanceQuestions = [];
+let balanceCurrentQ = 0;
+let balanceCurrentPlayer = 1;
+let balanceAnswersA = [];
+let balanceAnswersB = [];
+let balanceMatchCount = 0;
 
 async function startCoupleGame() {
-    const res = await fetch('/api/couple/start', { method: 'POST' });
-    coupleData = await res.json();
-    renderBalanceQuestions(coupleData.balance_questions);
-    renderPredictQuestions(coupleData.predict_questions);
-    loadChallenges();
-    showScreen('couple');
+    showLoading('게임을 준비하고 있어요...');
+    try {
+        const res = await fetch('/api/couple/start', { method: 'POST' });
+        if (!res.ok) throw new Error('게임을 시작할 수 없습니다.');
+        coupleData = await res.json();
+        balanceQuestions = coupleData.balance_questions;
+        balanceCurrentQ = 0;
+        balanceCurrentPlayer = 1;
+        balanceAnswersA = [];
+        balanceAnswersB = [];
+        balanceMatchCount = 0;
+
+        renderBalanceTurn();
+        renderPredictQuestions(coupleData.predict_questions);
+        loadChallenges();
+        hideLoading();
+        showScreen('couple');
+    } catch (err) {
+        hideLoading();
+        showError(err.message || '게임을 시작할 수 없습니다.');
+    }
 }
 
-function renderBalanceQuestions(questions) {
-    const el = document.getElementById('balance-questions');
-    let html = '';
-    questions.forEach((q, i) => {
-        html += `<div class="balance-card" data-q-index="${i}">
-            <h4>${q.question}</h4>
-            <p style="color:var(--accent);font-size:0.8rem;margin-bottom:12px">Player 1</p>
-            <div class="balance-options">
-                <div class="balance-opt" onclick="selectBalance(this, ${i}, 'a', 1)" data-player="1" data-value="a">${q.option_a}</div>
-                <div class="balance-opt" onclick="selectBalance(this, ${i}, 'b', 1)" data-player="1" data-value="b">${q.option_b}</div>
-            </div>
-            <p style="color:var(--primary-light);font-size:0.8rem;margin:12px 0 8px">Player 2</p>
-            <div class="balance-options">
-                <div class="balance-opt" onclick="selectBalance(this, ${i}, 'a', 2)" data-player="2" data-value="a">${q.option_a}</div>
-                <div class="balance-opt" onclick="selectBalance(this, ${i}, 'b', 2)" data-player="2" data-value="b">${q.option_b}</div>
-            </div>
-        </div>`;
-    });
-    el.innerHTML = html;
-}
+function renderBalanceTurn() {
+    const area = document.getElementById('balance-game-area');
 
-function selectBalance(el, qIndex, value, player) {
-    const card = el.closest('.balance-card');
-    card.querySelectorAll(`.balance-opt[data-player="${player}"]`).forEach(o => o.classList.remove('selected'));
-    el.classList.add('selected');
-}
-
-async function submitBalance() {
-    const cards = document.querySelectorAll('.balance-card');
-    const answersA = [];
-    const answersB = [];
-    let allAnswered = true;
-
-    cards.forEach(card => {
-        const selA = card.querySelector('.balance-opt[data-player="1"].selected');
-        const selB = card.querySelector('.balance-opt[data-player="2"].selected');
-        if (!selA || !selB) {
-            allAnswered = false;
-            return;
-        }
-        answersA.push(selA.dataset.value);
-        answersB.push(selB.dataset.value);
-    });
-
-    if (!allAnswered) {
-        alert('모든 질문에 답해주세요!');
+    if (balanceCurrentQ >= balanceQuestions.length) {
+        // All questions done, submit
+        submitBalanceResults();
         return;
     }
 
-    const res = await fetch('/api/couple/balance', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            session_id: coupleData.session_id,
-            answers_a: answersA,
-            answers_b: answersB,
-        }),
-    });
-    const result = await res.json();
-    renderCoupleResult(result);
-    showScreen('couple-result');
+    const q = balanceQuestions[balanceCurrentQ];
+    const isPlayer1 = balanceCurrentPlayer === 1;
+    const playerLabel = isPlayer1 ? 'Player 1의 차례' : 'Player 2의 차례';
+    const playerClass = isPlayer1 ? '' : 'player-2';
+
+    let html = `
+        <div class="turn-indicator">
+            <div class="player-label ${playerClass}">${playerLabel}</div>
+        </div>
+        <div class="turn-score">
+            <div class="score-item">
+                <div>진행</div>
+                <div class="score-val">${balanceCurrentQ + 1}/${balanceQuestions.length}</div>
+            </div>
+            <div class="score-item">
+                <div>일치</div>
+                <div class="score-val">${balanceMatchCount}</div>
+            </div>
+        </div>
+        <div class="balance-card">
+            <h4>${q.question}</h4>
+            <div class="balance-options">
+                <div class="balance-opt" tabindex="0" role="button"
+                     aria-label="옵션 A: ${q.option_a}"
+                     onclick="pickBalanceOption('a')"
+                     onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();pickBalanceOption('a')}">
+                    ${q.option_a}
+                </div>
+                <div class="balance-opt" tabindex="0" role="button"
+                     aria-label="옵션 B: ${q.option_b}"
+                     onclick="pickBalanceOption('b')"
+                     onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();pickBalanceOption('b')}">
+                    ${q.option_b}
+                </div>
+            </div>
+        </div>`;
+
+    area.innerHTML = html;
+}
+
+function pickBalanceOption(value) {
+    if (balanceCurrentPlayer === 1) {
+        balanceAnswersA.push(value);
+        // Show pass screen
+        showPassScreen();
+    } else {
+        balanceAnswersB.push(value);
+        // Check match/mismatch
+        const aAnswer = balanceAnswersA[balanceCurrentQ];
+        const bAnswer = value;
+        const matched = aAnswer === bAnswer;
+        if (matched) balanceMatchCount++;
+        showMatchResult(matched, balanceCurrentQ);
+    }
+}
+
+function showPassScreen() {
+    const area = document.getElementById('balance-game-area');
+    area.innerHTML = `
+        <div class="pass-screen">
+            <h2>Player 2에게 전달하세요!</h2>
+            <p>화면을 보지 않고 핸드폰을 넘겨주세요</p>
+            <button class="btn btn-accent btn-full" onclick="startPlayer2Turn()"
+                    aria-label="Player 2 시작">준비 완료</button>
+        </div>`;
+}
+
+function startPlayer2Turn() {
+    balanceCurrentPlayer = 2;
+    renderBalanceTurn();
+}
+
+function showMatchResult(matched, qIndex) {
+    const area = document.getElementById('balance-game-area');
+    const q = balanceQuestions[qIndex];
+    const iconText = matched ? '✓' : '✗';
+    const resultText = matched ? '같은 선택!' : '다른 선택';
+    const matchClass = matched ? 'matched' : 'mismatched';
+    const a = balanceAnswersA[qIndex];
+    const b = balanceAnswersB[qIndex];
+    const aText = a === 'a' ? q.option_a : q.option_b;
+    const bText = b === 'a' ? q.option_a : q.option_b;
+
+    area.innerHTML = `
+        <div class="turn-score">
+            <div class="score-item">
+                <div>진행</div>
+                <div class="score-val">${qIndex + 1}/${balanceQuestions.length}</div>
+            </div>
+            <div class="score-item">
+                <div>일치</div>
+                <div class="score-val">${balanceMatchCount}</div>
+            </div>
+        </div>
+        <div class="match-result-card ${matchClass}">
+            <div class="result-icon">${iconText}</div>
+            <div class="result-text">${resultText}</div>
+            <p style="color:var(--text-dim);margin-top:8px">
+                Player 1: ${aText}<br>
+                Player 2: ${bText}
+            </p>
+        </div>
+        <button class="btn btn-full mt-20" onclick="nextBalanceQuestion()"
+                aria-label="다음 질문">${qIndex + 1 < balanceQuestions.length ? '다음 질문' : '결과 보기'}</button>`;
+}
+
+function nextBalanceQuestion() {
+    balanceCurrentQ++;
+    balanceCurrentPlayer = 1;
+    renderBalanceTurn();
+}
+
+async function submitBalanceResults() {
+    showLoading('결과를 계산하고 있어요...');
+    try {
+        const res = await fetch('/api/couple/balance', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                session_id: coupleData.session_id,
+                answers_a: balanceAnswersA,
+                answers_b: balanceAnswersB,
+            }),
+        });
+        if (!res.ok) throw new Error('결과를 계산할 수 없습니다.');
+        const result = await res.json();
+        hideLoading();
+        renderCoupleResult(result);
+        showScreen('couple-result');
+    } catch (err) {
+        hideLoading();
+        showError(err.message || '결과를 계산할 수 없습니다.');
+    }
 }
 
 function renderCoupleResult(result) {
@@ -297,30 +892,72 @@ function renderCoupleResult(result) {
     else if (pct >= 60) { grade = 'B'; gradeClass = 'b'; }
     else if (pct >= 40) { grade = 'C'; gradeClass = 'c'; }
 
+    // SVG circle parameters
+    const radius = 75;
+    const circumference = 2 * Math.PI * radius;
+    const offset = circumference - (pct / 100) * circumference;
+
     let html = `
-        <div class="sync-circle">
-            <div>
-                <div class="number">${Math.round(pct)}</div>
-                <div class="unit">%</div>
+        <div class="sync-circle-container">
+            <div class="sync-circle">
+                <svg width="160" height="160" viewBox="0 0 160 160" aria-hidden="true">
+                    <circle class="bg" cx="80" cy="80" r="${radius}"/>
+                    <circle class="progress" cx="80" cy="80" r="${radius}"
+                            style="stroke-dasharray:${circumference};stroke-dashoffset:${circumference}"
+                            id="sync-progress-circle"/>
+                </svg>
+                <div class="sync-inner">
+                    <div class="number" id="sync-number">0</div>
+                    <div class="unit">%</div>
+                </div>
             </div>
         </div>
-        <div class="sync-grade ${gradeClass}">${grade}</div>
+        <div class="sync-grade ${gradeClass}" aria-label="등급: ${grade}">${grade}</div>
         <p class="text-center" style="color:var(--text-dim)">싱크로율: ${result.matched}/${result.total} 일치</p>
     `;
 
-    if (result.highlights.length > 0) {
-        html += `<div class="report-section mt-20"><h3>일치하는 부분</h3>`;
+    if (result.highlights && result.highlights.length > 0) {
+        html += `<div class="report-section section-growth mt-20"><h3>일치하는 부분</h3>`;
         result.highlights.forEach(h => html += `<p style="color:var(--success)">${h}</p>`);
         html += `</div>`;
     }
 
-    if (result.mismatches.length > 0) {
-        html += `<div class="report-section"><h3>다른 부분</h3>`;
+    if (result.mismatches && result.mismatches.length > 0) {
+        html += `<div class="report-section section-tension"><h3>다른 부분</h3>`;
         result.mismatches.forEach(m => html += `<p style="color:var(--warning)">${m}</p>`);
         html += `</div>`;
     }
 
     el.innerHTML = html;
+
+    // Animate sync circle
+    requestAnimationFrame(() => {
+        setTimeout(() => {
+            const circle = document.getElementById('sync-progress-circle');
+            if (circle) {
+                circle.style.strokeDashoffset = offset;
+            }
+            // Animate number
+            animateNumber('sync-number', 0, Math.round(pct), 1500);
+        }, 200);
+    });
+}
+
+function animateNumber(elementId, start, end, duration) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    const startTime = performance.now();
+    function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+        const current = Math.round(start + (end - start) * eased);
+        el.textContent = current;
+        if (progress < 1) {
+            requestAnimationFrame(update);
+        }
+    }
+    requestAnimationFrame(update);
 }
 
 function renderPredictQuestions(questions) {
@@ -331,7 +968,9 @@ function renderPredictQuestions(questions) {
             <p style="color:var(--text-dim);font-style:italic;margin-bottom:12px">${q.situation}</p>
             <h3>${q.question}</h3>`;
         q.choices.forEach((c, ci) => {
-            html += `<button class="choice-btn" onclick="this.classList.toggle('selected')">${c}</button>`;
+            html += `<button class="choice-btn" onclick="this.classList.toggle('selected')"
+                      aria-label="선택: ${c}" aria-pressed="false"
+                      onfocus="this.setAttribute('aria-pressed', this.classList.contains('selected'))">${c}</button>`;
         });
         html += `</div>`;
     });
@@ -339,22 +978,27 @@ function renderPredictQuestions(questions) {
 }
 
 async function loadChallenges() {
-    const res = await fetch('/api/challenges');
-    const challenges = await res.json();
-    const el = document.getElementById('challenge-list');
-    let html = '';
-    challenges.forEach(c => {
-        const stars = '★'.repeat(c.difficulty) + '☆'.repeat(3 - c.difficulty);
-        html += `<div class="challenge-card">
-            <h4>${c.title}</h4>
-            <p>${c.description}</p>
-            <div class="challenge-meta">
-                <span>난이도: ${stars}</span>
-                <span>보상: ${c.reward_points}점</span>
-            </div>
-        </div>`;
-    });
-    el.innerHTML = html;
+    try {
+        const res = await fetch('/api/challenges');
+        if (!res.ok) throw new Error('챌린지를 불러올 수 없습니다.');
+        const challenges = await res.json();
+        const el = document.getElementById('challenge-list');
+        let html = '';
+        challenges.forEach(c => {
+            const stars = '★'.repeat(c.difficulty) + '☆'.repeat(3 - c.difficulty);
+            html += `<div class="challenge-card">
+                <h4>${c.title}</h4>
+                <p>${c.description}</p>
+                <div class="challenge-meta">
+                    <span>난이도: ${stars}</span>
+                    <span>보상: ${c.reward_points}점</span>
+                </div>
+            </div>`;
+        });
+        el.innerHTML = html;
+    } catch (err) {
+        showError(err.message || '챌린지를 불러올 수 없습니다.');
+    }
 }
 </script>
 </body>

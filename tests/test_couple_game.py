@@ -79,7 +79,7 @@ class TestCoupleGameEngine:
         challenges = self.engine.get_challenge_set(3)
         assert len(challenges) == 3
         difficulties = {c.difficulty for c in challenges}
-        assert len(difficulties) >= 2  # at least 2 different difficulties
+        assert len(difficulties) >= 2
 
     def test_complete_challenge(self):
         session = self.engine.create_session("alice", "bob")
@@ -95,7 +95,7 @@ class TestCoupleGameEngine:
         ch_id = session.challenges[0].id
         self.engine.complete_challenge(session, ch_id, "alice")
         points2 = self.engine.complete_challenge(session, ch_id, "alice")
-        assert points2 == 0  # no double credit
+        assert points2 == 0
 
     def test_couple_level(self):
         session = CoupleGameSession(

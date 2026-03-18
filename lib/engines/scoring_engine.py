@@ -2,34 +2,23 @@
 
 from __future__ import annotations
 
+from typing import Optional
+
 from ..models.question import PsychDimension
 from ..models.user_profile import (
     AttachmentProfile,
     BigFiveProfile,
     LoveTriangleProfile,
+    RelationshipStatus,
     UserProfile,
 )
 
 
-# 각 차원별 최대 누적 가능 점수 (정규화 기준)
-BIG_FIVE_DIMS = {
-    PsychDimension.EXTRAVERSION,
-    PsychDimension.NEUROTICISM,
-    PsychDimension.CONSCIENTIOUSNESS,
-    PsychDimension.OPENNESS,
-    PsychDimension.AGREEABLENESS,
-}
-
-ATTACHMENT_DIMS = {
-    PsychDimension.ATTACHMENT_SECURE,
-    PsychDimension.ATTACHMENT_ANXIOUS,
-    PsychDimension.ATTACHMENT_AVOIDANT,
-}
-
-LOVE_DIMS = {
-    PsychDimension.INTIMACY,
-    PsychDimension.PASSION,
-    PsychDimension.COMMITMENT,
+# 사랑 삼각이론 차원별 가중치 (Phase 2 질문 부족 보정)
+LOVE_WEIGHTS = {
+    "intimacy": 1.0,
+    "passion": 1.3,      # 질문 수 적으므로 가중치 보정
+    "commitment": 1.4,   # 질문 수 적으므로 가중치 보정
 }
 
 
@@ -47,14 +36,26 @@ class ScoringEngine:
             self.raw_scores[dim_key] = self.raw_scores.get(dim_key, 0) + score
             self.answer_count[dim_key] = self.answer_count.get(dim_key, 0) + 1
 
-    def _normalize(self, dim_key: str, max_per_question: float = 10.0) -> float:
-        """차원 점수를 0~100으로 정규화"""
+    def _normalize(self, dim_key: str, max_per_question: float = 10.0, weight: float = 1.0) -> float:
+        """차원 점수를 0~100으로 정규화 (가중치 적용)"""
         count = self.answer_count.get(dim_key, 0)
         if count == 0:
-            return 50.0  # 기본값
+            return 50.0
         raw = self.raw_scores.get(dim_key, 0)
         avg = raw / count
-        return min(100.0, max(0.0, (avg / max_per_question) * 100))
+        weighted = avg * weight
+        return min(100.0, max(0.0, (weighted / max_per_question) * 100))
+
+    def get_confidence(self, dim_key: str) -> str:
+        """해당 차원의 측정 신뢰도 (질문 수 기반)"""
+        count = self.answer_count.get(dim_key, 0)
+        if count >= 5:
+            return "high"
+        elif count >= 3:
+            return "medium"
+        elif count >= 1:
+            return "low"
+        return "none"
 
     def build_big_five(self) -> BigFiveProfile:
         return BigFiveProfile(
@@ -74,19 +75,29 @@ class ScoringEngine:
 
     def build_love_triangle(self) -> LoveTriangleProfile:
         return LoveTriangleProfile(
-            intimacy=self._normalize("intimacy"),
-            passion=self._normalize("passion"),
-            commitment=self._normalize("commitment"),
+            intimacy=self._normalize("intimacy", weight=LOVE_WEIGHTS["intimacy"]),
+            passion=self._normalize("passion", weight=LOVE_WEIGHTS["passion"]),
+            commitment=self._normalize("commitment", weight=LOVE_WEIGHTS["commitment"]),
         )
 
-    def build_profile(self, user_id: str) -> UserProfile:
+    def build_profile(self, user_id: str, relationship_status: RelationshipStatus = RelationshipStatus.PREFER_NOT_TO_SAY) -> UserProfile:
         """전체 프로파일 생성"""
         return UserProfile(
             user_id=user_id,
+            relationship_status=relationship_status,
             big_five=self.build_big_five(),
             attachment=self.build_attachment(),
             love_triangle=self.build_love_triangle(),
         )
+
+    def get_all_confidences(self) -> dict[str, str]:
+        """모든 차원의 신뢰도 반환"""
+        dims = [
+            "extraversion", "neuroticism", "conscientiousness", "openness", "agreeableness",
+            "attachment_secure", "attachment_anxious", "attachment_avoidant",
+            "intimacy", "passion", "commitment",
+        ]
+        return {d: self.get_confidence(d) for d in dims}
 
     def reset(self) -> None:
         self.raw_scores.clear()

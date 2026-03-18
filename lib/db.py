@@ -1,4 +1,4 @@
-"""SQLite 기반 데이터 저장소"""
+"""SQLite 기반 데이터 저장소 (세션 영속화 포함)"""
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ DB_PATH = Path(__file__).parent.parent / "miromi.db"
 
 
 class Database:
-    """사용자 프로파일 및 게임 세션 저장"""
+    """사용자 프로파일, 세션, 게임 데이터 저장"""
 
     def __init__(self, db_path: Optional[Path] = None):
         self.db_path = db_path or DB_PATH
@@ -30,6 +30,7 @@ class Database:
                 CREATE TABLE IF NOT EXISTS users (
                     user_id TEXT PRIMARY KEY,
                     nickname TEXT,
+                    relationship_status TEXT DEFAULT 'prefer_not_to_say',
                     created_at TEXT DEFAULT (datetime('now'))
                 );
 
@@ -44,9 +45,23 @@ class Database:
                 CREATE TABLE IF NOT EXISTS answers (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     user_id TEXT NOT NULL,
+                    session_id TEXT,
                     question_id TEXT NOT NULL,
                     choice_index INTEGER NOT NULL,
                     created_at TEXT DEFAULT (datetime('now')),
+                    FOREIGN KEY (user_id) REFERENCES users(user_id)
+                );
+
+                CREATE TABLE IF NOT EXISTS journey_sessions (
+                    session_id TEXT PRIMARY KEY,
+                    user_id TEXT NOT NULL,
+                    phase INTEGER DEFAULT 1,
+                    current_index INTEGER DEFAULT 0,
+                    scoring_data TEXT DEFAULT '{}',
+                    relationship_status TEXT DEFAULT 'prefer_not_to_say',
+                    completed INTEGER DEFAULT 0,
+                    created_at TEXT DEFAULT (datetime('now')),
+                    updated_at TEXT DEFAULT (datetime('now')),
                     FOREIGN KEY (user_id) REFERENCES users(user_id)
                 );
 
@@ -75,21 +90,55 @@ class Database:
 
     # ──── 사용자 ────
 
-    def create_user(self, user_id: str, nickname: str = "") -> None:
+    def create_user(self, user_id: str, nickname: str = "", relationship_status: str = "prefer_not_to_say") -> None:
         with self._get_conn() as conn:
             conn.execute(
-                "INSERT OR IGNORE INTO users (user_id, nickname) VALUES (?, ?)",
-                (user_id, nickname),
+                "INSERT OR IGNORE INTO users (user_id, nickname, relationship_status) VALUES (?, ?, ?)",
+                (user_id, nickname, relationship_status),
             )
 
     def get_user(self, user_id: str) -> Optional[dict]:
         with self._get_conn() as conn:
             row = conn.execute(
-                "SELECT user_id, nickname, created_at FROM users WHERE user_id = ?",
+                "SELECT user_id, nickname, relationship_status, created_at FROM users WHERE user_id = ?",
                 (user_id,),
             ).fetchone()
         if row:
-            return {"user_id": row[0], "nickname": row[1], "created_at": row[2]}
+            return {"user_id": row[0], "nickname": row[1], "relationship_status": row[2], "created_at": row[3]}
+        return None
+
+    # ──── 여행 세션 (Phase 1 영속화) ────
+
+    def save_journey_session(self, session_id: str, user_id: str, current_index: int,
+                             scoring_data: dict, phase: int = 1,
+                             relationship_status: str = "prefer_not_to_say",
+                             completed: bool = False) -> None:
+        with self._get_conn() as conn:
+            conn.execute(
+                """INSERT OR REPLACE INTO journey_sessions
+                   (session_id, user_id, phase, current_index, scoring_data,
+                    relationship_status, completed, updated_at)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'))""",
+                (session_id, user_id, phase, current_index,
+                 json.dumps(scoring_data), relationship_status,
+                 1 if completed else 0),
+            )
+
+    def get_journey_session(self, session_id: str) -> Optional[dict]:
+        with self._get_conn() as conn:
+            row = conn.execute(
+                """SELECT session_id, user_id, phase, current_index, scoring_data,
+                          relationship_status, completed, created_at
+                   FROM journey_sessions WHERE session_id = ?""",
+                (session_id,),
+            ).fetchone()
+        if row:
+            return {
+                "session_id": row[0], "user_id": row[1], "phase": row[2],
+                "current_index": row[3], "scoring_data": json.loads(row[4]),
+                "relationship_status": row[5], "completed": bool(row[6]),
+                "created_at": row[7],
+            }
         return None
 
     # ──── 프로파일 ────
@@ -121,12 +170,20 @@ class Database:
 
     # ──── 답변 ────
 
-    def save_answer(self, user_id: str, question_id: str, choice_index: int) -> None:
+    def save_answer(self, user_id: str, question_id: str, choice_index: int, session_id: str = "") -> None:
         with self._get_conn() as conn:
             conn.execute(
-                "INSERT INTO answers (user_id, question_id, choice_index) VALUES (?, ?, ?)",
-                (user_id, question_id, choice_index),
+                "INSERT INTO answers (user_id, session_id, question_id, choice_index) VALUES (?, ?, ?, ?)",
+                (user_id, session_id, question_id, choice_index),
             )
+
+    def get_answers_for_session(self, session_id: str) -> list[dict]:
+        with self._get_conn() as conn:
+            rows = conn.execute(
+                "SELECT question_id, choice_index FROM answers WHERE session_id = ? ORDER BY id",
+                (session_id,),
+            ).fetchall()
+        return [{"question_id": r[0], "choice_index": r[1]} for r in rows]
 
     # ──── 커플 세션 ────
 

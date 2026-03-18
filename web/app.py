@@ -1,4 +1,4 @@
-"""Miromi 웹 데모 - FastAPI + Jinja2"""
+"""Miromi 웹 데모 - FastAPI + Jinja2 (세션 영속화, 성장 추적)"""
 
 from __future__ import annotations
 
@@ -18,6 +18,7 @@ from lib.engines.question_engine import QuestionEngine
 from lib.engines.scoring_engine import ScoringEngine
 from lib.engines.narrative_engine import NarrativeEngine
 from lib.engines.couple_game_engine import CoupleGameEngine
+from lib.models.user_profile import RelationshipStatus
 from lib.db import Database
 
 app = FastAPI(title="Miromi", description="나를 비추는 거울, 당신을 이해하게 만드는 앱")
@@ -30,7 +31,7 @@ app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 db = Database()
 
-# 세션 저장 (간단한 인메모리)
+# 인메모리 세션 (DB 백업 있음)
 sessions: dict[str, dict] = {}
 
 
@@ -40,88 +41,117 @@ async def home(request: Request):
 
 
 @app.post("/api/start")
-async def start_journey():
-    """Phase 1 여행 시작"""
+async def start_journey(request: Request):
+    """Phase 1 여행 시작 (관계 상태 분기 지원)"""
+    data = await request.json() if request.headers.get("content-type") == "application/json" else {}
+    rel_status = data.get("relationship_status", "prefer_not_to_say")
+    shuffle = data.get("shuffle", False)
+
+    try:
+        rs = RelationshipStatus(rel_status)
+    except ValueError:
+        rs = RelationshipStatus.PREFER_NOT_TO_SAY
+
     session_id = str(uuid.uuid4())[:8]
-    engine = QuestionEngine(phase=1)
+    engine = QuestionEngine(phase=1, shuffle=shuffle, relationship_status=rs)
     scoring = ScoringEngine()
 
     sessions[session_id] = {
         "engine": engine,
         "scoring": scoring,
         "user_id": session_id,
+        "relationship_status": rs,
     }
-    db.create_user(session_id, "여행자")
+
+    db.create_user(session_id, "여행자", rel_status)
+    db.save_journey_session(session_id, session_id, 0, {}, 1, rel_status)
 
     q = engine.current_question()
     return {
         "session_id": session_id,
-        "question": _format_question(q),
+        "question": _format_question(q, engine),
         "progress": {"current": 1, "total": engine.total},
     }
 
 
 @app.post("/api/answer")
 async def answer_question(request: Request):
-    """질문에 답변"""
+    """질문에 답변 (세션 영속화)"""
     data = await request.json()
     session_id = data["session_id"]
     choice_index = data["choice_index"]
 
     session = sessions.get(session_id)
     if not session:
-        return JSONResponse({"error": "세션을 찾을 수 없습니다"}, status_code=404)
+        # DB에서 세션 복구 시도
+        saved = db.get_journey_session(session_id)
+        if saved and not saved["completed"]:
+            rs = RelationshipStatus(saved["relationship_status"])
+            engine = QuestionEngine(phase=saved["phase"], relationship_status=rs)
+            scoring = ScoringEngine()
+            scoring.raw_scores = saved["scoring_data"].get("raw_scores", {})
+            scoring.answer_count = saved["scoring_data"].get("answer_count", {})
+            engine.current_index = saved["current_index"]
+            session = {"engine": engine, "scoring": scoring, "user_id": saved["user_id"],
+                       "relationship_status": rs}
+            sessions[session_id] = session
+        else:
+            return JSONResponse({"error": "세션을 찾을 수 없습니다"}, status_code=404)
 
     engine: QuestionEngine = session["engine"]
     scoring: ScoringEngine = session["scoring"]
 
     current_q = engine.current_question()
     if current_q:
-        db.save_answer(session["user_id"], current_q.id, choice_index)
+        db.save_answer(session["user_id"], current_q.id, choice_index, session_id)
 
     scores = engine.answer(choice_index)
     scoring.add_scores(scores)
 
+    # 세션 DB 저장
+    db.save_journey_session(
+        session_id, session["user_id"], engine.current_index,
+        {"raw_scores": scoring.raw_scores, "answer_count": scoring.answer_count},
+        1, session.get("relationship_status", RelationshipStatus.PREFER_NOT_TO_SAY).value,
+        completed=engine.is_complete,
+    )
+
     if engine.is_complete:
-        profile = scoring.build_profile(session["user_id"])
+        rs = session.get("relationship_status", RelationshipStatus.PREFER_NOT_TO_SAY)
+        profile = scoring.build_profile(session["user_id"], rs)
         db.save_profile(profile)
+
+        # 성장 추적: 이전 프로파일 비교
+        previous = db.get_latest_profile(session["user_id"])
         narrative = NarrativeEngine()
-        report = narrative.generate_report(profile)
+        report = narrative.generate_report(profile, previous if previous and previous.user_id == profile.user_id else None)
 
         return {
             "complete": True,
-            "report": {
-                "profile_summary": report.profile_summary,
-                "struggle_reason": report.struggle_reason,
-                "comfort_message": report.comfort_message,
-                "sections": [
-                    {
-                        "title": s.title,
-                        "summary": s.summary,
-                        "insights": [
-                            {
-                                "title": i.title,
-                                "description": i.description,
-                                "empathy_message": i.empathy_message,
-                            }
-                            for i in s.insights
-                        ],
-                    }
-                    for s in report.sections
-                ],
-                "action_tips": report.action_tips,
-            },
+            "report": _format_report(report),
             "scores": {
                 "big_five": profile.big_five.model_dump(),
-                "attachment": profile.attachment.model_dump(),
-                "love_triangle": profile.love_triangle.model_dump(),
+                "attachment": {
+                    **profile.attachment.model_dump(),
+                    "dominant_type": profile.attachment.dominant_type,
+                    "blend": profile.attachment.blend_description,
+                    "is_mixed": profile.attachment.is_mixed,
+                    "spectrum": profile.attachment.spectrum,
+                },
+                "love_triangle": {
+                    **profile.love_triangle.model_dump(),
+                    "love_type": profile.love_triangle.love_type,
+                    "strongest": profile.love_triangle.strongest,
+                    "weakest": profile.love_triangle.weakest,
+                },
             },
+            "confidences": scoring.get_all_confidences(),
         }
 
     q = engine.current_question()
     return {
         "complete": False,
-        "question": _format_question(q),
+        "question": _format_question(q, engine),
         "progress": {"current": engine.current_index + 1, "total": engine.total},
     }
 
@@ -139,11 +169,6 @@ async def start_couple_game():
         "engine": game_engine,
         "balance_qs": balance_qs,
         "predict_qs": predict_qs,
-        "balance_answers_a": [],
-        "balance_answers_b": [],
-        "predict_index": 0,
-        "score_a": 0,
-        "score_b": 0,
     }
 
     return {
@@ -213,15 +238,60 @@ async def get_challenges():
     ]
 
 
-def _format_question(q) -> dict:
+def _format_question(q, engine: QuestionEngine = None) -> dict:
     if q is None:
         return {}
-    return {
+    result = {
         "id": q.id,
         "category": q.category.value,
         "narrative": q.narrative,
         "question": q.question,
         "choices": [{"text": c.text} for c in q.choices],
+    }
+    if engine:
+        result["phase_intro"] = engine.get_phase_intro()
+    return result
+
+
+def _format_report(report) -> dict:
+    return {
+        "profile_summary": report.profile_summary,
+        "struggle_reason": report.struggle_reason,
+        "comfort_message": report.comfort_message,
+        "sections": [
+            {
+                "title": s.title,
+                "summary": s.summary,
+                "icon": s.icon,
+                "color": s.color,
+                "insights": [
+                    {
+                        "title": i.title,
+                        "description": i.description,
+                        "empathy_message": i.empathy_message,
+                        "priority": i.priority.value,
+                        "color_hint": i.color_hint,
+                    }
+                    for i in s.insights
+                ],
+            }
+            for s in report.sections
+        ],
+        "action_tips": report.action_tips,
+        "action_plan": [
+            {"week": s.week, "action": s.action, "reason": s.reason}
+            for s in report.action_plan
+        ],
+        "tension_insights": [
+            {
+                "title": t.title,
+                "description": t.description,
+                "empathy_message": t.empathy_message,
+                "color_hint": t.color_hint,
+            }
+            for t in report.tension_insights
+        ],
+        "growth_notes": report.growth_notes,
     }
 
 
